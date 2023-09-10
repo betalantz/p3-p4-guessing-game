@@ -7,13 +7,13 @@ export default function GuessForm({
   },
   onGuessRequest,
 }) {
-  const [guess, setGuess] = useState(round.minValue);
+  const [guess, setGuess] = useState();
   const [errors, setErrors] = useState([]);
   const [isShowHint, setIsShowHint] = useState(false);
 
   useEffect(() => {
     setGuess(game.minValue);
-  }, [game.minValue]);
+  }, [game]);
 
   async function updateGame() {
     const updateData = {
@@ -30,7 +30,7 @@ export default function GuessForm({
     if (res.ok) {
       const updGame = await res.json();
       onGuessRequest(updGame);
-      setGuess(0);
+      setGuess(updGame.minValue);
       setErrors([]);
     } else {
       const messages = await res.json();

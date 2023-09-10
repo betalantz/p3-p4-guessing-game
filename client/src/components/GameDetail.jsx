@@ -9,18 +9,27 @@ function GameDetail() {
     error: null,
     status: "pending",
   });
-
+  const [rounds, setRounds] = useState([]);
   const { id } = useParams();
   const [showGuess, setShowGuess] = useState(true);
 
   const fetchGame = useCallback(async () => {
-    const res = await fetch(`/games/${id}`);
-    if (res.ok) {
-      const gameJSON = await res.json();
+    const [responseGame, responseRounds] = await Promise.all([
+      fetch(`/games/${id}`),
+      fetch(`/games/${id}/rounds`),
+    ]);
+    if (responseGame.ok) {
+      const gameJSON = await responseGame.json();
       setGame({ data: gameJSON, error: null, status: "resolved" });
     } else {
-      const gameErr = await res.json();
+      const gameErr = await responseGame.json();
       setGame({ data: null, error: gameErr, status: "rejected" });
+    }
+    if (responseRounds.ok) {
+      const roundsJSON = await responseRounds.json();
+      setRounds(roundsJSON);
+    } else {
+      setRounds([]);
     }
   }, [id]);
 
@@ -29,7 +38,7 @@ function GameDetail() {
   }, [id, fetchGame]);
 
   function handleUpdateGame(updatedGame) {
-    setGame({ data: updatedGame, error: null, status: "resolved" });
+    fetchGame();
     setShowGuess(!updatedGame.isOver);
   }
 
@@ -51,8 +60,8 @@ function GameDetail() {
       <h2>Rounds:</h2>
       <div className="roundList">
         <ul>
-          {game?.rounds.toReversed().map((r, index) => (
-            <RoundCard key={index} round={r} isHighlightRound={index === 0} />
+          {rounds?.toReversed().map((r, index) => (
+            <RoundCard key={r.id} round={r} isHighlightRound={index === 0} />
           ))}
         </ul>
       </div>

@@ -1,8 +1,8 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 
-from models import Game
-from schemas import GameSchema, GameUpdateSchema
+from models import Game, Round
+from schemas import GameSchema, GameUpdateSchema, RoundSchema
 
 blp = Blueprint("Guessing Game API", __name__)
 
@@ -46,10 +46,24 @@ class GamesById(MethodView):
     
     @blp.response(204)
     def delete(self, game_id):
-        """Delete game by id"""
+        """Delete game and associated rounds by id"""
         try:
             del Game.all[game_id]
+            # Delete associated rounds
+            for k, v in list(Round.all.items()):
+                if v.game_id == game_id:
+                    del Round.all[k]
         except KeyError:
             abort(404, message=f"Game {game_id} not found.")
 
         
+@blp.route("/games/<int:game_id>/rounds")
+class RoundsByGameId(MethodView):
+    
+    @blp.response(200, RoundSchema(many=True))
+    def get(self, game_id):
+        """Get rounds by game id"""
+        game = Game.all.get(game_id)
+        if game is None:
+            abort(404, message=f"Game {game_id} not found.")
+        return game.rounds()

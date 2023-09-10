@@ -22,8 +22,8 @@ function RoundCard({ round, isHighlightRound }) {
           <Slider
             value={round.guess}
             valueLabelDisplay="on"
-            min={1}
-            max={100}
+            min={round.minValue}
+            max={round.maxValue}
             marks={marks}
             disabled
           />
