@@ -23,22 +23,19 @@ class Game():
         self.rounds = []
         type(self).all[self.id] = self  
         
+        
     def playRound(self, guess) :
-        if not self.gameOver: 
+        if not self.isOver: 
             round = Round(self.minValue, self.maxValue, guess)
             if guess == self.secretNumber:
                 round.status = "correct"
                 self.isOver = True
-            elif round.guess < self.minValue or round.guess > self.maxValue:
+            elif guess < self.minValue or guess > self.maxValue:
                 round.status = "invalid"
-            elif round.guess > self.secretNumber:
+            elif guess > self.secretNumber:
                 round.status = "too high"
-                self.maxValue = round.guess - 1 
+                self.maxValue = round.guess - 1 #adjust for next round
             else:
                 round.status = "too low"
-                self.minValue = round.guess + 1
+                self.minValue = round.guess + 1 #adjust for next round
             self.rounds.append( round )
-        
-
-    
-    

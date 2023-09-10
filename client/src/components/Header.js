@@ -1,10 +1,15 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Header() {
   return (
-    <header>
-      <h1>Guessing Game</h1>
-    </header>
+    <nav>
+      <span>
+        <h1>
+          <Link to="/">Guess the number</Link>
+        </h1>
+      </span>
+    </nav>
   );
 }
 

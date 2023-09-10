@@ -1,92 +1,64 @@
-/* css variables for theming */
-:root {
-  --bg-color-1: rgb(255, 255, 255);
-  --bg-color-2: rgba(245, 245, 245);
-  --bg-color-3: rgba(230, 230, 230);
-  --main-font-color: rgb(0, 0, 0);
-  --alt-font-color: rgb(25, 25, 25);
-  --theme-primary: rgba(233, 11, 121, 1);
-  --theme-primary-gradient: linear-gradient(
-    90deg,
-    rgba(233, 11, 121, 1) 0%,
-    rgba(242, 106, 88, 1) 100%
-  );
-}
-
-* {
-  margin: 0;
-  padding: 0;
-}
-
 body {
-  font-size: 14px;
-  font-family: "Helvetica", sans-serif;
-  background-color: rgb(155, 155, 155);
+  margin: 0;
+  font: 100% "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+  color: midnightblue;
+}
+
+a:hover {
+  color: lime;
+}
+
+a:visited {
+  color: hsl(264, 95%, 52%);
 }
 
 main {
   display: grid;
   max-width: 400px;
-  margin: 100px auto;
+  margin: 10px auto;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto 1fr auto;
-  color: var(--main-font-color);
-  background-color: var(--bg-color-1);
-  transition: all 0.5s;
-  box-shadow: 5px 5px 15px -6px #8c8c8c;
+
+  padding: 10px;
+  background-color: gray;
+  color: turquoise;
+  font: 100% "Chakra Petch", sans-serif;
+}
+
+nav {
+  font: 120% "Audiowide", cursive;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  background: white;
+}
+
+.gameCard {
+  margin: 5px 0;
+  padding: 5px;
+  border: 1px solid grey;
+  color: black;
+  border-radius: 12px;
+  background-color: white;
 }
 
 .highlight {
   border: 6px solid red;
 }
 
-input[type="text"] {
-  color: var(--main-font-color);
-  background-color: var(--bg-color-2);
-  font-size: 1rem;
-  border: none;
-  padding: 0.5em 1em;
-  transition: all 0.2s;
-}
-
-input[type="text"]::placeholder {
-  font-style: italic;
-}
-
-input[type="text"]:focus {
-  outline: none;
-  background-color: var(--bg-color-3);
-}
-
-button[type="submit"] {
-  border: none;
-  font-size: 1rem;
-  width: 100px;
-  padding: 0.25rem;
-  background-color: var(--theme-primary);
-  color: var(--alt-font-color);
-}
-
-/* Header */
-header {
-  padding: 0.5rem;
-  color: var(--alt-font-color);
-  background: var(--theme-primary-gradient);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 ul {
   list-style-type: none;
 }
 
-li {
-  margin-top: 1em;
-}
-
 .roundList {
-  margin-top: 1em;
+  background-color: white;
+  padding-top: 1em;
 }
 
 form p,
@@ -94,6 +66,6 @@ input {
   margin: 1em;
 }
 
-.currentRound {
-  background-color: lightyellow;
+.highlightRound {
+  background-color: hsl(264, 95%, 52%);
 }

@@ -4,7 +4,7 @@ import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
 import Status from "./Status";
 
-function GameRoundCard({ round, currentRound }) {
+function RoundCard({ round, isHighlightRound }) {
   const marks = [
     {
       value: round.minValue,
@@ -15,10 +15,9 @@ function GameRoundCard({ round, currentRound }) {
       label: round.maxValue,
     },
   ];
-  const liClass = currentRound ? "currentRound" : null;
   return (
-    <li className={liClass}>
-      <Stack spacing={1} direction="row" sx={{ mt: 4 }} alignItems="center">
+    <li>
+      <Stack spacing={1} direction="row" sx={{ mt: 2 }} alignItems="center">
         <Box sx={{ width: 300, padding: 2 }}>
           <Slider
             value={round.guess}
@@ -29,10 +28,12 @@ function GameRoundCard({ round, currentRound }) {
             disabled
           />
         </Box>
-        <Status status={round.status} />
+        <div className={isHighlightRound ? "highlightRound" : null}>
+          <Status status={round.status} />
+        </div>
       </Stack>
     </li>
   );
 }
 
-export default GameRoundCard;
+export default RoundCard;
