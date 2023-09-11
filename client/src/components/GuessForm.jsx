@@ -10,9 +10,11 @@ export default function GuessForm({
   const [guess, setGuess] = useState();
   const [errors, setErrors] = useState([]);
   const [isShowHint, setIsShowHint] = useState(false);
+  const [rand, setRand] = useState();
 
   useEffect(() => {
     setGuess(game.minValue);
+    setRand(Math.floor(Math.random() * 3) + 3); //3..5
   }, [game]);
 
   async function updateGame() {
@@ -82,7 +84,9 @@ export default function GuessForm({
         />
         <label htmlFor="toggle-show-hint"></label>
         {isShowHint ? (
-          <span>What is {game.secretNumber - 2 ** 4} + (2**4)?</span>
+          <span>
+            What is {game.secretNumber - 2 ** rand} + (2**{rand})?
+          </span>
         ) : null}
       </div>
     </section>

@@ -6,7 +6,7 @@ class Round():
     all = {}
     
     def __init__(self, game_id, minValue, maxValue, guess, status = None):
-        self.id = len(self.all) + 1      # str(uuid.uuid4())
+        self.id = str(uuid.uuid4())
         self.game_id = game_id
         self.minValue = minValue
         self.maxValue = maxValue
@@ -19,7 +19,7 @@ class Game():
     all = {}
     
     def __init__(self , minValue, maxValue):
-        self.id = len(self.all) + 1      # str(uuid.uuid4())
+        self.id = str(uuid.uuid4())
         self.minValue = minValue
         self.maxValue = maxValue
         self.secretNumber = randint(self.minValue, self.maxValue)
@@ -33,6 +33,7 @@ class Game():
     def playRound(self, guess) :
         if not self.isOver: 
             round = Round(self.id, self.minValue, self.maxValue, guess)
+            
             if guess == self.secretNumber:
                 round.status = "correct"
                 self.isOver = True

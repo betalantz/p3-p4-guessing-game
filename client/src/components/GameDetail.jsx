@@ -14,6 +14,7 @@ function GameDetail() {
   const [showGuess, setShowGuess] = useState(true);
 
   const fetchGame = useCallback(async () => {
+    //Phase 3 schemas are not nested, need separate fetches for game and rounds
     const [responseGame, responseRounds] = await Promise.all([
       fetch(`/games/${id}`),
       fetch(`/games/${id}/rounds`),
@@ -26,6 +27,7 @@ function GameDetail() {
       setGame({ data: null, error: gameErr, status: "rejected" });
     }
     if (responseRounds.ok) {
+      //assume err is handled when fetching game by id
       const roundsJSON = await responseRounds.json();
       setRounds(roundsJSON);
     } else {

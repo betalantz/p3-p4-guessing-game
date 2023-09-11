@@ -2,8 +2,8 @@ from marshmallow import Schema, fields, validates_schema, validates,ValidationEr
 from models import Game
 
 class RoundSchema(Schema):
-    id = fields.Int()
-    game_id = fields.Int()
+    id = fields.Str()
+    game_id = fields.Str()
     minValue = fields.Int()
     maxValue = fields.Int()
     guess = fields.Int()
@@ -17,7 +17,7 @@ class RoundSchema(Schema):
 
     
 class GameSchema(Schema):
-    id = fields.Int(dump_only = True)
+    id = fields.Str(dump_only = True)
     minValue = fields.Int(required=True)
     maxValue = fields.Int(required=True)
     secretNumber = fields.Int(dump_only = True)

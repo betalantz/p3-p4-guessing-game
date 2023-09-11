@@ -20,7 +20,7 @@ class Games(MethodView):
         """Create a new game"""
         return Game(**fields)
 
-@blp.route("/games/<int:game_id>")
+@blp.route("/games/<string:game_id>")
 class GamesById(MethodView):
     
     @blp.response(200, GameSchema)
@@ -57,7 +57,7 @@ class GamesById(MethodView):
             abort(404, message=f"Game {game_id} not found.")
 
         
-@blp.route("/games/<int:game_id>/rounds")
+@blp.route("/games/<string:game_id>/rounds")
 class RoundsByGameId(MethodView):
     
     @blp.response(200, RoundSchema(many=True))

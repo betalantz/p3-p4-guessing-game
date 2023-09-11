@@ -6,7 +6,7 @@ function Header() {
     <nav>
       <span>
         <h1>
-          <Link to="/">Guess the number</Link>
+          <Link to="/">Guessing Game Dashboard</Link>
         </h1>
       </span>
     </nav>
