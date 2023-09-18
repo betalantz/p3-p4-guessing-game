@@ -4,31 +4,31 @@ import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
 import Status from "./Status";
 
-function RoundCard({ round, isHighlightRound }) {
+function RoundCard({ round, game_min, game_max }) {
   const marks = [
     {
-      value: round.minValue,
-      label: round.minValue,
+      value: round.min_value,
+      label: round.min_value,
     },
     {
-      value: round.maxValue,
-      label: round.maxValue,
+      value: round.max_value,
+      label: round.max_value,
     },
   ];
   return (
     <li>
       <Stack spacing={1} direction="row" sx={{ mt: 2 }} alignItems="center">
-        <Box sx={{ width: 300, padding: 2 }}>
+        <Box sx={{ width: 600, padding: 1 }}>
           <Slider
             value={round.guess}
             valueLabelDisplay="on"
-            min={round.minValue}
-            max={round.maxValue}
+            min={game_min}
+            max={game_max}
             marks={marks}
             disabled
           />
         </Box>
-        <div className={isHighlightRound ? "highlightRound" : null}>
+        <div>
           <Status status={round.status} />
         </div>
       </Stack>

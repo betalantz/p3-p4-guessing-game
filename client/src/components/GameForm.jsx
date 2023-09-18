@@ -3,8 +3,8 @@ import React, { useState } from "react";
 export default function GameForm({
   onGameRequest,
   game = {
-    minValue: 1,
-    maxValue: 100,
+    min_value: 1,
+    max_value: 100,
   },
 }) {
   const [formData, setFormData] = useState(game);
@@ -23,8 +23,8 @@ export default function GameForm({
       const newGame = await res.json();
       onGameRequest(newGame);
       setFormData({
-        minValue: 1,
-        maxValue: 100,
+        min_value: 1,
+        max_value: 100,
       });
       setErrors([]);
     } else {
@@ -48,26 +48,26 @@ export default function GameForm({
   return (
     <section>
       <form onSubmit={handleSubmit}>
-        <h2>Start New Game</h2>
+        <h2>New Game</h2>
         <div>
-          <label htmlFor="minValue">Minimum value:</label>
+          <label htmlFor="min_value">Minimum value:</label>
 
           <input
             type="number"
-            id="minValue"
+            id="min_value"
             placeholder="Enter minimum"
-            value={formData.minValue}
+            value={formData.min_value}
             onChange={handleChange}
           />
         </div>
         <div>
-          <label htmlFor="maxValue">Maximum value:</label>
+          <label htmlFor="max_value">Maximum value:</label>
 
           <input
             type="number"
-            id="maxValue"
+            id="max_value"
             placeholder="Enter maximum"
-            value={formData.maxValue}
+            value={formData.max_value}
             onChange={handleChange}
           />
         </div>

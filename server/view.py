@@ -35,35 +35,22 @@ class GamesById(MethodView):
     @blp.arguments(GameUpdateSchema)
     @blp.response(200, GameSchema)
     def patch(self, fields, game_id):
-        """Update game by id.  Add a new round of play based on the guess."""
+        """Update game by id.  Update current round based on the guess."""
         game = Game.all.get(game_id)
         if game is None:
             abort(404, message=f"Game {game_id} not found.")
-        if game.isOver:
+        if game.is_over:
             abort(409, message=f"Game {game_id} is over, no more guessing.")
-        game.playRound(fields["guess"])
+        game.play_round(fields["guess"])
         return game
     
     @blp.response(204)
     def delete(self, game_id):
         """Delete game and associated rounds by id"""
-        try:
-            del Game.all[game_id]
-            # Delete associated rounds
-            for k, v in list(Round.all.items()):
-                if v.game_id == game_id:
-                    del Round.all[k]
-        except KeyError:
-            abort(404, message=f"Game {game_id} not found.")
-
-        
-@blp.route("/games/<string:game_id>/rounds")
-class RoundsByGameId(MethodView):
-    
-    @blp.response(200, RoundSchema(many=True))
-    def get(self, game_id):
-        """Get rounds by game id"""
         game = Game.all.get(game_id)
         if game is None:
             abort(404, message=f"Game {game_id} not found.")
-        return game.rounds()
+        # Delete associated rounds
+        Round.all = [round for round in Round.all if round.game is not game]
+        # Delete the game
+        del Game.all[game_id]

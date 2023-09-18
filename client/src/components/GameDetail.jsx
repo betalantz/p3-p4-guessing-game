@@ -9,29 +9,17 @@ function GameDetail() {
     error: null,
     status: "pending",
   });
-  const [rounds, setRounds] = useState([]);
   const { id } = useParams();
   const [showGuess, setShowGuess] = useState(true);
 
   const fetchGame = useCallback(async () => {
-    //Phase 3 schemas are not nested, need separate fetches for game and rounds
-    const [responseGame, responseRounds] = await Promise.all([
-      fetch(`/games/${id}`),
-      fetch(`/games/${id}/rounds`),
-    ]);
-    if (responseGame.ok) {
-      const gameJSON = await responseGame.json();
+    const response = await fetch(`/games/${id}`);
+    if (response.ok) {
+      const gameJSON = await response.json();
       setGame({ data: gameJSON, error: null, status: "resolved" });
     } else {
-      const gameErr = await responseGame.json();
+      const gameErr = await response.json();
       setGame({ data: null, error: gameErr, status: "rejected" });
-    }
-    if (responseRounds.ok) {
-      //assume err is handled when fetching game by id
-      const roundsJSON = await responseRounds.json();
-      setRounds(roundsJSON);
-    } else {
-      setRounds([]);
     }
   }, [id]);
 
@@ -41,7 +29,7 @@ function GameDetail() {
 
   function handleUpdateGame(updatedGame) {
     fetchGame();
-    setShowGuess(!updatedGame.isOver);
+    setShowGuess(!updatedGame.is_over);
   }
 
   if (status === "pending") return <h2>Loading...</h2>;
@@ -49,22 +37,30 @@ function GameDetail() {
 
   return (
     <div>
-      <h2>Game #{game.id}</h2>
+      <h2>Game {game.id}</h2>
 
       {showGuess ? (
         <GuessForm game={game} onGuessRequest={handleUpdateGame} />
       ) : (
         <p>
-          Congratulations! You guessed the secret number {game.secretNumber}!
+          Congratulations! You guessed the secret number {game.secret_number}!
         </p>
       )}
       <hr />
       <h2>Rounds:</h2>
       <div className="roundList">
         <ul>
-          {rounds?.toReversed().map((r, index) => (
-            <RoundCard key={r.id} round={r} isHighlightRound={index === 0} />
-          ))}
+          {game.rounds.map((round, index) =>
+            round.status ? (
+              <RoundCard
+                key={index}
+                round={round}
+                game_min={game.rounds[0].min_value}
+                game_max={game.rounds[0].max_value}
+                isCurrent={round.id === game.current_round.id}
+              />
+            ) : null
+          )}
         </ul>
       </div>
     </div>

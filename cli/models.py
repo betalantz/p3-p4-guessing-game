@@ -1,7 +1,6 @@
 from random import randint
-import uuid
-
 from enum import Enum
+import uuid
 
 class Status(Enum):
     CORRECT = "correct"
@@ -14,7 +13,6 @@ class Round():
     all = []
     
     def __init__(self, game, min_value, max_value):
-        self.id = str(uuid.uuid4())
         self.game = game
         self.min_value = min_value
         self.max_value = max_value
@@ -24,13 +22,13 @@ class Round():
 
 class Game():
     
-    all = {}
+    all = []
     
     def __init__(self , min_value, max_value):
         self.id = str(uuid.uuid4())
         self.secret_number = randint(min_value, max_value)
         self.is_over = False
-        type(self).all[self.id] = self 
+        type(self).all.append(self)
         Round(self, min_value, max_value)  #setup first round of play
         
     def get_rounds(self) : 
@@ -59,4 +57,4 @@ class Game():
         else:
             current_round.status = Status.LOW
             Round(self, guess + 1, current_round.max_value) #adjust min_value for next round
-    
+            

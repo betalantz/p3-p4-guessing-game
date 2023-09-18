@@ -19,22 +19,16 @@ a:visited {
 }
 
 main {
-  display: grid;
-  max-width: 400px;
+  max-width: 600px;
   margin: 10px auto;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto auto 1fr auto;
-
   padding: 10px;
-  background-color: gray;
-  color: turquoise;
-  font: 100% "Chakra Petch", sans-serif;
+  color: white;
+  background-color: purple;
 }
 
 nav {
   font: 120% "Audiowide", cursive;
   display: flex;
-  flex-flow: row wrap;
   justify-content: center;
   background: white;
 }
@@ -58,6 +52,7 @@ ul {
 
 .roundList {
   background-color: white;
+  color: purple;
   padding-top: 1em;
 }
 
@@ -67,5 +62,5 @@ input {
 }
 
 .highlightRound {
-  background-color: hsl(264, 95%, 52%);
+  border: 5px dashed turquoise;
 }

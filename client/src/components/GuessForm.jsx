@@ -13,7 +13,7 @@ export default function GuessForm({
   const [rand, setRand] = useState();
 
   useEffect(() => {
-    setGuess(game.minValue);
+    setGuess(game.current_round.min_value);
     setRand(Math.floor(Math.random() * 3) + 3); //3..5
   }, [game]);
 
@@ -32,7 +32,7 @@ export default function GuessForm({
     if (res.ok) {
       const updGame = await res.json();
       onGuessRequest(updGame);
-      setGuess(updGame.minValue);
+      setGuess(updGame.current_round.min_value);
       setErrors([]);
     } else {
       const messages = await res.json();
@@ -53,7 +53,8 @@ export default function GuessForm({
     <section>
       <form onSubmit={handleSubmit}>
         <h2>
-          Guess a number from {game.minValue} to {game.maxValue}.
+          Guess a number from {game.current_round.min_value} to{" "}
+          {game.current_round.max_value}.
         </h2>
         <div>
           <label htmlFor="guess">Enter Guess:</label>
@@ -62,8 +63,8 @@ export default function GuessForm({
             id="guess"
             placeholder="Enter guess"
             defaultValue={guess}
-            min={game.minValue}
-            max={game.maxValue}
+            min={game.current_round.min_value}
+            max={game.current_round.max_value}
             onChange={handleChange}
           />
         </div>
@@ -82,10 +83,11 @@ export default function GuessForm({
           checked={isShowHint}
           onChange={(e) => setIsShowHint(e.target.checked)}
         />
+
         <label htmlFor="toggle-show-hint"></label>
         {isShowHint ? (
           <span>
-            What is {game.secretNumber - 2 ** rand} + (2**{rand})?
+            What is {game.secret_number - 2 ** rand} + (2**{rand})?
           </span>
         ) : null}
       </div>
