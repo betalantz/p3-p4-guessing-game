@@ -10,7 +10,7 @@ function GameDetail() {
     status: "pending",
   });
   const { id } = useParams();
-  const [showGuess, setShowGuess] = useState(true);
+  const [showGuessForm, setShowGuessForm] = useState(true);
 
   const fetchGame = useCallback(async () => {
     const response = await fetch(`/games/${id}`);
@@ -29,7 +29,7 @@ function GameDetail() {
 
   function handleUpdateGame(updatedGame) {
     fetchGame();
-    setShowGuess(!updatedGame.is_over);
+    setShowGuessForm(!updatedGame.is_over);
   }
 
   if (status === "pending") return <h2>Loading...</h2>;
@@ -39,7 +39,7 @@ function GameDetail() {
     <div>
       <h2>Game {game.id}</h2>
 
-      {showGuess ? (
+      {showGuessForm ? (
         <GuessForm game={game} onGuessRequest={handleUpdateGame} />
       ) : (
         <p>
@@ -55,9 +55,8 @@ function GameDetail() {
               <RoundCard
                 key={index}
                 round={round}
-                game_min={game.rounds[0].min_value}
-                game_max={game.rounds[0].max_value}
-                isCurrent={round.id === game.current_round.id}
+                game_min={game.min_value}
+                game_max={game.max_value}
               />
             ) : null
           )}

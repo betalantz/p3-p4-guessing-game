@@ -4,15 +4,19 @@ import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
 import Status from "./Status";
 
-function RoundCard({ round, game_min, game_max }) {
+function RoundCard({
+  round: { min_value, max_value, guess, status },
+  game_min,
+  game_max,
+}) {
   const marks = [
     {
-      value: round.min_value,
-      label: round.min_value,
+      value: min_value,
+      label: min_value,
     },
     {
-      value: round.max_value,
-      label: round.max_value,
+      value: max_value,
+      label: max_value,
     },
   ];
   return (
@@ -20,16 +24,16 @@ function RoundCard({ round, game_min, game_max }) {
       <Stack spacing={1} direction="row" sx={{ mt: 2 }} alignItems="center">
         <Box sx={{ width: 600, padding: 1 }}>
           <Slider
-            value={round.guess}
+            value={guess}
             valueLabelDisplay="on"
             min={game_min}
             max={game_max}
             marks={marks}
-            disabled
+            track={false}
           />
         </Box>
         <div>
-          <Status status={round.status} />
+          <Status status={status} />
         </div>
       </Stack>
     </li>

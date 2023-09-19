@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 
-export default function GameForm({
-  onGameRequest,
-  game = {
+export default function GameForm({ onGameRequest }) {
+  const [formData, setFormData] = useState({
     min_value: 1,
     max_value: 100,
-  },
-}) {
-  const [formData, setFormData] = useState(game);
+  });
   const [errors, setErrors] = useState([]);
 
   async function postGame() {

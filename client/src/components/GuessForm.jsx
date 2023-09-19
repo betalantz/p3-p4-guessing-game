@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function GuessForm({
-  game,
-  round = {
-    guess: 0,
-  },
-  onGuessRequest,
-}) {
+export default function GuessForm({ game, onGuessRequest }) {
   const [guess, setGuess] = useState();
   const [errors, setErrors] = useState([]);
   const [isShowHint, setIsShowHint] = useState(false);

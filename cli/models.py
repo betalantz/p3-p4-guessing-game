@@ -14,6 +14,7 @@ class Round():
     
     def __init__(self, game, min_value, max_value):
         self.game = game
+        self.number = len(game.get_rounds()) + 1 
         self.min_value = min_value
         self.max_value = max_value
         self.guess = None 
@@ -26,6 +27,8 @@ class Game():
     
     def __init__(self , min_value, max_value):
         self.id = str(uuid.uuid4())
+        self.min_value = min_value
+        self.max_value = max_value
         self.secret_number = randint(min_value, max_value)
         self.is_over = False
         type(self).all.append(self)

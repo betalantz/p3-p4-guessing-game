@@ -4,6 +4,7 @@ from models import Round, Game
 class RoundSchema(Schema):
     __model__ = Round
     id = fields.Str()
+    number = fields.Int()
     min_value = fields.Int()
     max_value = fields.Int()
     guess = fields.Int()
@@ -12,8 +13,8 @@ class RoundSchema(Schema):
 class GameSchema(Schema):
     __model__ = Game
     id = fields.Str(dump_only = True)
-    min_value = fields.Int(required=True, load_only = True)
-    max_value = fields.Int(required=True, load_only = True)
+    min_value = fields.Int(required=True)
+    max_value = fields.Int(required=True)
     secret_number = fields.Int(dump_only = True)
     is_over = fields.Boolean(dump_only = True)
     current_round = fields.Nested(RoundSchema, dump_only = True)
@@ -27,7 +28,7 @@ class GameSchema(Schema):
         return data
     
     @validates_schema
-    def validate_numbers(self, data, **kwargs):
+    def validate_range(self, data, **kwargs):
         min_val = data["min_value"]
         max_val = data["max_value"]
         if min_val >= max_val:

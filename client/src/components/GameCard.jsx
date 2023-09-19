@@ -2,16 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function GameCard({
-  game: { id, is_over, secret_number, current_round, rounds },
+  game: { id, is_over, min_value, max_value, secret_number, rounds },
   onDelete,
 }) {
   return (
     <div className="gameCard">
       <h3>Game {id}</h3>
       <p>
-        Guessing range is {rounds[0].min_value} .. {rounds[0].max_value}
+        Guessing range is {min_value} .. {max_value}
       </p>
-      {current_round.status === "Status.CORRECT" ? (
+      {is_over ? (
         <p>
           It took {rounds.length} guesses to guess the secret number{" "}
           {secret_number}.
