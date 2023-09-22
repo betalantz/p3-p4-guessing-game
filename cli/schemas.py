@@ -3,22 +3,25 @@ from models import Round, Game
 
 class RoundSchema(Schema):
     __model__ = Round
+    # Use 'only' or 'exclude' to avoid infinite recursion with two-way nested fields.
+    game = fields.Nested("GameSchema", only=("id",))
     number = fields.Int()
     min_value = fields.Int()
     max_value = fields.Int()
     guess = fields.Int()
-    status = fields.String()
+    status = fields.Str()
     
 class GameSchema(Schema):
     __model__ = Game
     id = fields.Str(dump_only = True)
+    level = fields.Str(required=True)
     min_value = fields.Int(required=True)
     max_value = fields.Int(required=True)
     secret_number = fields.Int(dump_only = True)
     is_over = fields.Boolean(dump_only = True)
     rounds = fields.Nested(RoundSchema, many=True, dump_only = True)
     
-    # Compute list of rounds prior to serialization
+    # Compute list of rounds associated with this game prior to serialization
     @pre_dump()
     def get_data(self, data, **kwargs):
         data.rounds = data.get_rounds()

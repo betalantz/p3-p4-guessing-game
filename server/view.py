@@ -50,7 +50,7 @@ class GamesById(MethodView):
         game = Game.all.get(game_id)
         if game is None:
             abort(404, message=f"Game {game_id} not found.")
-        # Delete associated rounds
+        # Exclude all rounds associated with this game
         Round.all = [round for round in Round.all if round.game is not game]
-        # Delete the game
+        # Exclude the game from the dictionary
         del Game.all[game_id]

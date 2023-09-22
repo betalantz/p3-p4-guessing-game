@@ -1,13 +1,16 @@
 from random import randint
 import uuid
+from enum import StrEnum, auto
 
-from enum import Enum
-
-class Status(Enum):
-    CORRECT = "correct"
-    HIGH = "too high"
-    LOW= "too low"
-    INVALID = "outside of range"
+class Status(StrEnum):
+    CORRECT = auto() #correct
+    HIGH = auto()    #high
+    LOW= auto()      #low
+    INVALID = auto() #invalid
+    
+class Level(StrEnum):
+    EASY = auto()   #easy
+    HARD= auto()    #hard
     
 class Round():
     
@@ -27,8 +30,9 @@ class Game():
     
     all = {}
     
-    def __init__(self , min_value, max_value):
+    def __init__(self , level, min_value, max_value):
         self.id = str(uuid.uuid4())
+        self.level = level
         self.min_value = min_value
         self.max_value = max_value
         self.secret_number = randint(min_value, max_value)
@@ -39,27 +43,30 @@ class Game():
     def get_rounds(self) : 
         """Get list of rounds for this game"""
         return [round for round in Round.all if round.game is self]
- 
-    def get_current_round(self):
-        """Get last round in list"""
-        return self.get_rounds()[-1]  
             
     def play_round(self, guess):
         """Update the current round based on the guess"""
         if self.is_over: 
             raise Exception("Game is over.")
-        current_round = self.get_current_round()
+        current_round = self.get_rounds()[-1]  #get the last round in list
         current_round.guess = guess
         if guess == self.secret_number:
             current_round.status = Status.CORRECT
             self.is_over = True
-        elif guess < current_round.min_value or guess > current_round.max_value:
-            current_round.status = Status.INVALID
-            Round(self, current_round.min_value, current_round.max_value)  #same range for next round
-        elif guess > self.secret_number:
-            current_round.status = Status.HIGH
-            Round(self, current_round.min_value, guess - 1) #adjust max_value for next round
         else:
-            current_round.status = Status.LOW
-            Round(self, guess + 1, current_round.max_value) #adjust min_value for next round
+            #assign status for current round and setup the next round
+            next_min = current_round.min_value
+            next_max = current_round.max_value
+            if guess < current_round.min_value or guess > current_round.max_value:
+                current_round.status = Status.INVALID #guess outside of min..max range
+            elif guess > self.secret_number:
+                current_round.status = Status.HIGH
+                if self.level == Level.EASY:
+                    next_max = guess - 1  #adjust max_value for next round   
+            else:
+                current_round.status = Status.LOW
+                if self.level == Level.EASY:
+                    next_min= guess + 1  #adjust min_value for next round      
+
+            Round(self, next_min, next_max) 
     
