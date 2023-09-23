@@ -26,22 +26,25 @@ function RoundCard({ round, onGuessRequest }) {
         label: round.max_value,
       },
     ]);
-    if (round.status === "correct") {
-      setStatusMessage(`${round.guess} is correct!`);
-    } else {
-      if (round.status === "low") {
+    switch (round.status) {
+      case "correct":
+        setStatusMessage(`${round.guess} is correct!`);
+        break;
+      case "low":
         setStatusMessage(`${round.guess} is too low.`);
-      } else if (round.status === "high") {
+        break;
+      case "high":
         setStatusMessage(`${round.guess} is too high.`);
-      } else if (round.status === "invalid") {
+        break;
+      case "invalid":
         setStatusMessage(
           `${round.guess} is outside the valid range of numbers.`
         );
-      } else {
+        break;
+      default:
         setStatusMessage(
           `Guess a number from ${round.min_value} to ${round.max_value}.`
         );
-      }
     }
   }, [round, isCurrentRound]);
 

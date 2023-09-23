@@ -2,14 +2,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function GameCard({
-  game: { id, level, secret_number, is_over, min_value, max_value, rounds },
+  game: {
+    id,
+    difficulty,
+    secret_number,
+    is_over,
+    min_value,
+    max_value,
+    rounds,
+  },
   onDelete,
 }) {
   return (
     <div className="gameCard">
       <h3>Game {id}</h3>
       <p>
-        Difficulty level is {level}. Guessing range is {min_value} ..{" "}
+        Level of difficulty is {difficulty}. Guessing range is {min_value} ..{" "}
         {max_value}.
       </p>
       {is_over && (

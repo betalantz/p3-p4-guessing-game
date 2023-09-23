@@ -20,11 +20,11 @@ def response_message(round):
             
 def new_game():
     try :
-        level = input("Enter the difficulty level (easy or hard): ")
+        difficulty = input("Enter the level of difficulty (easy or hard): ")
         min_value = input("Enter the minimum value: ")
         max_value = input("Enter the maximum value: ")
         schema = GameSchema()
-        game = schema.load({"level" : level, "min_value" : min_value, "max_value" : max_value})
+        game = schema.load({"difficulty" : difficulty, "min_value" : min_value, "max_value" : max_value})
         #pprint(schema.dump(game))
         while not game.is_over:
             current_round = game.get_rounds()[-1]  #last round in list

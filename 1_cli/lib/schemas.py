@@ -14,7 +14,7 @@ class RoundSchema(Schema):
 class GameSchema(Schema):
     __model__ = Game
     id = fields.Str(dump_only = True)
-    level = fields.Str(required=True, validate=validate.OneOf([level for level in DifficultyLevel.__members__.values()]))  #["easy", "hard"]
+    difficulty = fields.Str(required=True, validate=validate.OneOf([level for level in DifficultyLevel.__members__.values()]))  #["easy", "hard"]
     min_value = fields.Int(required=True)
     max_value = fields.Int(required=True)
     secret_number = fields.Int(dump_only = True)

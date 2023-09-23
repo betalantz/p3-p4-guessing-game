@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 export default function GameForm({ onGameRequest }) {
   const [formData, setFormData] = useState({
-    level: "easy",
+    difficulty: "easy",
     min_value: 1,
     max_value: 100,
   });
@@ -21,7 +21,7 @@ export default function GameForm({ onGameRequest }) {
       const newGame = await res.json();
       onGameRequest(newGame);
       setFormData({
-        level: "easy",
+        difficulty: "easy",
         min_value: 1,
         max_value: 100,
       });
@@ -49,15 +49,15 @@ export default function GameForm({ onGameRequest }) {
       <form onSubmit={handleSubmit}>
         <h2>New Game</h2>
         <div>
-          <label htmlFor="level">Select a difficulty level:</label>
+          <label htmlFor="difficulty">Select a level of difficulty:</label>
           <select
-            id="level"
-            name="level"
-            value={formData.level}
+            id="difficulty"
+            name="difficulty"
+            value={formData.difficulty}
             onChange={handleChange}
           >
-            <option key={"level_easy"}>easy</option>
-            <option key={"level_hard"}>hard</option>
+            <option key={"difficulty_easy"}>easy</option>
+            <option key={"difficulty_hard"}>hard</option>
           </select>
         </div>
 

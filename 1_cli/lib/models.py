@@ -28,9 +28,9 @@ class Game():
     
     all = {}  #dictionary with id as key
     
-    def __init__(self , level, min_value, max_value):
+    def __init__(self , difficulty, min_value, max_value):
         self.id = str(uuid.uuid4())
-        self.level = level
+        self.difficulty = difficulty
         self.min_value = min_value
         self.max_value = max_value
         self.secret_number = randint(min_value, max_value)
@@ -59,11 +59,11 @@ class Game():
                 current_round.status = GuessStatus.INVALID
             elif guess > self.secret_number:
                 current_round.status = GuessStatus.HIGH
-                if self.level is DifficultyLevel.EASY:
+                if self.difficulty == DifficultyLevel.EASY:
                     next_max = guess - 1  #adjust max_value for next round   
             else:
                 current_round.status = GuessStatus.LOW
-                if self.level is DifficultyLevel.EASY:
+                if self.difficulty == DifficultyLevel.EASY:
                     next_min= guess + 1  #adjust min_value for next round      
 
             Round(self, next_min, next_max) #create next round
