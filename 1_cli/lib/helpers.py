@@ -37,8 +37,7 @@ def new_game():
                 print(f"{response} is not an integer.")
     except ValidationError as err:
         print(err.messages)
-        
-        
+           
 def list_games():
     schema = GameSchema()
     [pprint(schema.dump(game)) for game in Game.all.values()]
@@ -46,11 +45,7 @@ def list_games():
 def list_game_by_id():
     id = input(f"Enter game id: ")
     game = Game.all.get(id)
-    if game is None:
-        print(f"Game {id} not found.")
-    else:
-        schema = GameSchema()
-        pprint(schema.dump(game))
+    pprint(GameSchema().dump(game)) if game else print(f"Game {id} not found.")
     
 def list_rounds():
     schema = RoundSchema()
@@ -59,9 +54,9 @@ def list_rounds():
 def list_rounds_by_game_id():
     id = input("Enter game id: ")
     game = Game.all.get(id)
-    if game is None:
-        print(f"Game {id} not found.")
-    else:
+    if game:
         schema = RoundSchema()
         [pprint(schema.dump(round)) for round in Round.all if round.game.id == id]
+    else:
+        print(f"Game {id} not found.")
   
