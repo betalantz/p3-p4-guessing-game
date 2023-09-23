@@ -13,21 +13,21 @@ def main():
     while True:
         menu()
         choice = input("> ")
-        if choice == "0":
-            exit_program()
-        elif choice == "1":
-            new_game()
-        elif choice == "2":
-            list_games()    
-        elif choice == "3":
-            list_game_by_id()
-        elif choice == "4":
-            list_rounds()
-        elif choice == "5":
-            list_rounds_by_game_id()   
-        else:
-            print("Invalid choice")
-
+        match choice:
+            case "0":
+                exit_program()
+            case "1":
+                new_game()
+            case "2":
+                list_games()    
+            case "3":
+                list_game_by_id()
+            case "4":
+                list_rounds()
+            case "5":
+                list_rounds_by_game_id()   
+            case _:
+                print("Invalid choice")
 
 def menu():
     print("Please select an option:")

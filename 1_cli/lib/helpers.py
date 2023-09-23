@@ -20,7 +20,7 @@ def response_message(round):
             
 def new_game():
     try :
-        level = input("Enter the difficulty level (easy/hard): ")
+        level = input("Enter the difficulty level (easy or hard): ")
         min_value = input("Enter the minimum value: ")
         max_value = input("Enter the maximum value: ")
         schema = GameSchema()

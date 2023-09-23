@@ -8,7 +8,7 @@ class RoundSchema(Schema):
     min_value = fields.Int()
     max_value = fields.Int()
     guess = fields.Int()
-    status = fields.Str(required=True, validate=validate.OneOf([status for status in GuessStatus.__members__.values()]))  #["correct", "low", "high", "invalid"]
+    status = fields.Str(validate=validate.OneOf([status for status in GuessStatus.__members__.values()]))  #["correct", "low", "high", "invalid"]
     
     
 class GameSchema(Schema):

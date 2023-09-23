@@ -3,14 +3,14 @@ from enum import  StrEnum, auto
 import uuid
 
 class GuessStatus(StrEnum):
-    CORRECT = auto() #correct
-    HIGH = auto()    #high
-    LOW= auto()      #low
-    INVALID = auto() #invalid
+    CORRECT = auto() 
+    HIGH = auto()    
+    LOW= auto()      
+    INVALID = auto() 
     
 class DifficultyLevel(StrEnum):
-    EASY = auto()   #easy
-    HARD= auto()    #hard
+    EASY = auto()   
+    HARD= auto()   
   
 class Round():
     
@@ -26,7 +26,7 @@ class Round():
 
 class Game():
     
-    all = {}  #dictionary
+    all = {}  #dictionary with id as key
     
     def __init__(self , level, min_value, max_value):
         self.id = str(uuid.uuid4())
@@ -35,7 +35,7 @@ class Game():
         self.max_value = max_value
         self.secret_number = randint(min_value, max_value)
         self.is_over = False
-        type(self).all[self.id] = self #use id for dictionary key
+        type(self).all[self.id] = self
         Round(self, min_value, max_value)  #setup first round of play
         
     def get_rounds(self) : 
@@ -52,11 +52,11 @@ class Game():
             current_round.status = GuessStatus.CORRECT
             self.is_over = True
         else:
-            #assign status for current round and setup the next round
+            #assign status to current round and create the next round of play
             next_min = current_round.min_value
             next_max = current_round.max_value
             if guess < current_round.min_value or guess > current_round.max_value:
-                current_round.status = GuessStatus.INVALID #guess outside of min..max range
+                current_round.status = GuessStatus.INVALID
             elif guess > self.secret_number:
                 current_round.status = GuessStatus.HIGH
                 if self.level is DifficultyLevel.EASY:
@@ -66,4 +66,4 @@ class Game():
                 if self.level is DifficultyLevel.EASY:
                     next_min= guess + 1  #adjust min_value for next round      
 
-            Round(self, next_min, next_max) 
+            Round(self, next_min, next_max) #create next round
