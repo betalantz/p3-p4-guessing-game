@@ -1,20 +1,20 @@
-from marshmallow import Schema, fields, pre_dump, post_load, validates_schema, ValidationError
-from models import Round, Game
+from marshmallow import Schema, fields, pre_dump, post_load, validates_schema, ValidationError, validate
+from models import Round, Game, DifficultyLevel, GuessStatus
 
 class RoundSchema(Schema):
     __model__ = Round
     # Use 'only' or 'exclude' to avoid infinite recursion with two-way nested fields.
     game = fields.Nested("GameSchema", only=("id",))
-    number = fields.Int()
     min_value = fields.Int()
     max_value = fields.Int()
     guess = fields.Int()
-    status = fields.Str()
+    status = fields.Str(required=True, validate=validate.OneOf([status for status in GuessStatus.__members__.values()]))  #["correct", "low", "high", "invalid"]
+    
     
 class GameSchema(Schema):
     __model__ = Game
     id = fields.Str(dump_only = True)
-    level = fields.Str(required=True)
+    level = fields.Str(required=True, validate=validate.OneOf([level for level in DifficultyLevel.__members__.values()]))  #["easy", "hard"]
     min_value = fields.Int(required=True)
     max_value = fields.Int(required=True)
     secret_number = fields.Int(dump_only = True)

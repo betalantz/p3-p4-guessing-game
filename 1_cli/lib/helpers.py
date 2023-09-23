@@ -1,5 +1,5 @@
-from models import Game, Level, Status
-from schemas import GameSchema
+from models import Game, Round, GuessStatus
+from schemas import GameSchema, RoundSchema
 from marshmallow import ValidationError
 from pprint import pprint
 
@@ -7,25 +7,20 @@ def exit_program():
     print("Goodbye!")
     exit()
 
-def list_games():
-    schema = GameSchema()
-    [pprint(schema.dump(game)) for game in Game.all]
-    
 def response_message(round):
     match round.status:
-        case Status.CORRECT:
+        case GuessStatus.CORRECT:
             return f"{round.guess} is correct!"
-        case Status.LOW:
+        case GuessStatus.LOW:
             return f"{round.guess} is too low."
-        case Status.HIGH:
+        case GuessStatus.HIGH:
             return f"{round.guess} is too high."
-        case Status.INVALID:
+        case GuessStatus.INVALID:
             return f"{round.guess} is outside the range {round.min_value}..{round.max_value}."
             
 def new_game():
     try :
-        str = input("Enter the difficulty level (EASY/HARD): ")
-        level = Level[str]
+        level = input("Enter the difficulty level (easy/hard): ")
         min_value = input("Enter the minimum value: ")
         max_value = input("Enter the maximum value: ")
         schema = GameSchema()
@@ -40,7 +35,33 @@ def new_game():
                 print(response_message(current_round))
             except Exception:
                 print(f"{response} is not an integer.")
-    except KeyError as err:
-        print(f"{err} is not a valid level")
     except ValidationError as err:
         print(err.messages)
+        
+        
+def list_games():
+    schema = GameSchema()
+    [pprint(schema.dump(game)) for game in Game.all.values()]
+    
+def list_game_by_id():
+    id = input(f"Enter game id: ")
+    game = Game.all.get(id)
+    if game is None:
+        print(f"Game {id} not found.")
+    else:
+        schema = GameSchema()
+        pprint(schema.dump(game))
+    
+def list_rounds():
+    schema = RoundSchema()
+    [pprint(schema.dump(round)) for round in Round.all]
+    
+def list_rounds_by_game_id():
+    id = input("Enter game id: ")
+    game = Game.all.get(id)
+    if game is None:
+        print(f"Game {id} not found.")
+    else:
+        schema = RoundSchema()
+        [pprint(schema.dump(round)) for round in Round.all if round.game.id == id]
+  
