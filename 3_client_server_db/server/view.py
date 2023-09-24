@@ -23,7 +23,7 @@ class Games(MethodView):
             game = Game(**fields)
             db.session.add(game)
             db.session.commit()
-            round = Round(game = game, min_value = game.min_value, max_value = game.max_value)
+            round = Round(game = game, range_min = game.range_min, range_max = game.range_max)
             db.session.add(round)
             db.session.commit()
         except SQLAlchemyError as err:

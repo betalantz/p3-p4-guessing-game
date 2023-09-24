@@ -15,15 +15,15 @@ function RoundCard({ round, onGuessRequest }) {
   }, [round]);
 
   useEffect(() => {
-    isCurrentRound ? setGuess(round.min_value) : setGuess(round.guess);
+    isCurrentRound ? setGuess(round.range_min) : setGuess(round.guess);
     setMarks([
       {
-        value: round.min_value,
-        label: round.min_value,
+        value: round.range_min,
+        label: round.range_min,
       },
       {
-        value: round.max_value,
-        label: round.max_value,
+        value: round.range_max,
+        label: round.range_max,
       },
     ]);
     switch (round.status) {
@@ -43,7 +43,7 @@ function RoundCard({ round, onGuessRequest }) {
         break;
       default:
         setStatusMessage(
-          `Guess a number from ${round.min_value} to ${round.max_value}.`
+          `Guess a number from ${round.range_min} to ${round.range_max}.`
         );
     }
   }, [round, isCurrentRound]);
@@ -63,7 +63,7 @@ function RoundCard({ round, onGuessRequest }) {
     if (res.ok) {
       const updGame = await res.json();
       onGuessRequest(updGame);
-      setGuess(round.min_value);
+      setGuess(round.range_min);
       setErrors([]);
     } else {
       const messages = await res.json();
@@ -88,8 +88,8 @@ function RoundCard({ round, onGuessRequest }) {
             <Slider
               value={guess}
               valueLabelDisplay="on"
-              min={round.min_value}
-              max={round.max_value}
+              min={round.range_min}
+              max={round.range_max}
               marks={marks}
               track={false}
               disabled={!isCurrentRound}

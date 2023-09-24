@@ -32,7 +32,7 @@ class GameSchema(Schema):
         range_min = data["range_min"]
         range_max = data["range_max"]
         if range_min > range_max:
-            raise ValidationError(f"error: range_min {range_min} is not less than range_max {range_max}")
+            raise ValidationError(f"error: range_min {range_min} is greater than range_max {range_max}")
         
 class GameUpdateSchema(Schema):
     guess = fields.Int(required=True)
