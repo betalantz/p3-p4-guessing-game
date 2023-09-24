@@ -5,8 +5,8 @@ class RoundSchema(Schema):
     __model__ = Round
     # Use 'only' or 'exclude' to avoid infinite recursion with two-way nested fields.
     game = fields.Nested("GameSchema", only=("id",))
-    min_value = fields.Int()
-    max_value = fields.Int()
+    range_min = fields.Int()
+    range_max = fields.Int()
     guess = fields.Int()
     status = fields.Str(validate=validate.OneOf([status for status in GuessStatus.__members__.values()]))  #["correct", "low", "high", "invalid"]
     
@@ -15,8 +15,8 @@ class GameSchema(Schema):
     __model__ = Game
     id = fields.Str(dump_only = True)
     difficulty = fields.Str(required=True, validate=validate.OneOf([level for level in DifficultyLevel.__members__.values()]))  #["easy", "hard"]
-    min_value = fields.Int(required=True)
-    max_value = fields.Int(required=True)
+    range_min = fields.Int(required=True)
+    range_max = fields.Int(required=True)
     secret_number = fields.Int(dump_only = True)
     is_over = fields.Boolean(dump_only = True)
     rounds = fields.Nested(RoundSchema, many=True, dump_only = True)
@@ -29,10 +29,10 @@ class GameSchema(Schema):
     
     @validates_schema
     def validate_range(self, data, **kwargs):
-        min_val = data["min_value"]
-        max_val = data["max_value"]
-        if min_val >= max_val:
-            raise ValidationError(f"min_value {min_val} must be less than max_value {max_val}.")
-    
+        range_min = data["range_min"]
+        range_max = data["range_max"]
+        if range_min > range_max:
+            raise ValidationError(f"error: range_min {range_min} is not less than range_max {range_max}")
+        
 class GameUpdateSchema(Schema):
     guess = fields.Int(required=True)

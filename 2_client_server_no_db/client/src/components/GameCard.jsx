@@ -7,8 +7,8 @@ function GameCard({
     difficulty,
     secret_number,
     is_over,
-    min_value,
-    max_value,
+    range_min,
+    range_max,
     rounds,
   },
   onDelete,
@@ -17,8 +17,8 @@ function GameCard({
     <div className="gameCard">
       <h3>Game {id}</h3>
       <p>
-        Level of difficulty is {difficulty}. Guessing range is {min_value} ..{" "}
-        {max_value}.
+        Level of difficulty is {difficulty}. Guessing range is {range_min} ..{" "}
+        {range_max}.
       </p>
       {is_over && (
         <p>
