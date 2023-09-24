@@ -16,19 +16,19 @@ def response_message(round):
         case GuessStatus.HIGH:
             return f"{round.guess} is too high."
         case GuessStatus.INVALID:
-            return f"{round.guess} is outside the range {round.min_value}..{round.max_value}."
+            return f"{round.guess} is outside the range {round.range_min}..{round.range_max}."
             
 def new_game():
     try :
         difficulty = input("Enter the level of difficulty (easy or hard): ")
-        min_value = input("Enter the minimum value: ")
-        max_value = input("Enter the maximum value: ")
+        range_min = input("Enter the minimum value: ")
+        range_max = input("Enter the maximum value: ")
         schema = GameSchema()
-        game = schema.load({"difficulty" : difficulty, "min_value" : min_value, "max_value" : max_value})
+        game = schema.load({"difficulty" : difficulty, "range_min" : range_min, "range_max" : range_max})
         #pprint(schema.dump(game))
         while not game.is_over:
             current_round = game.get_rounds()[-1]  #last round in list
-            response = input(f"Guess an integer between {current_round.min_value} and {current_round.max_value} (inclusive): ")
+            response = input(f"Guess an integer between {current_round.range_min} and {current_round.range_max} (inclusive): ")
             try :
                 guess = int(response)
                 game.play_round(guess)
