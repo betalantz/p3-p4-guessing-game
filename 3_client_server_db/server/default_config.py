@@ -12,5 +12,5 @@ class DefaultConfig:
     PROPAGATE_EXCEPTIONS = True
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = "sqlite:///app.db"
+    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:postgres@localhost:5432/guessing_game"
     

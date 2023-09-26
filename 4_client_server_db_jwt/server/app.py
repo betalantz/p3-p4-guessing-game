@@ -60,7 +60,7 @@ api.spec.components.security_scheme(
 api.register_blueprint(GameBlueprint)
 api.register_blueprint(UserBlueprint)
 
-#add lock icon for jwt endpoint 
+#add lock icon for jwt endpoints
 for path, items in api.spec._paths.items():
         for method in items.keys():
             endpoint = api.spec._paths[path][method]

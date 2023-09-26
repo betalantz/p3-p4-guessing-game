@@ -9,7 +9,6 @@ from schemas import GameSchema, GameUpdateSchema, RoundSchema
 
 blp = Blueprint("Games", "games", description="Operations on games")
 
-
 @blp.route("/games")
 class Games(MethodView):
     
