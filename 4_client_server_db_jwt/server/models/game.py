@@ -8,6 +8,7 @@ def create_secret_number(context):
 
 class Game(db.Model):
     """Game model"""
+    __tablename__ = "games"
     id = db.Column(db.Integer, primary_key=True)
     difficulty = db.Column(db.String, nullable=False)
     range_min = db.Column(db.Integer, nullable=False)
