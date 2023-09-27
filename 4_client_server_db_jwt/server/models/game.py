@@ -10,11 +10,16 @@ class Game(db.Model):
     """Game model"""
     __tablename__ = "games"
     id = db.Column(db.Integer, primary_key=True)
+    
     difficulty = db.Column(db.String, nullable=False)
     range_min = db.Column(db.Integer, nullable=False)
     range_max = db.Column(db.Integer, nullable=False)
     secret_number = db.Column(db.Integer, default=create_secret_number)
     is_over = db.Column(db.Boolean, default=False)
+    
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user = db.relationship("User", back_populates="games")
+ 
     rounds = db.relationship(
         "Round", back_populates="game", cascade="all, delete-orphan")
 

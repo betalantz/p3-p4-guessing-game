@@ -17,6 +17,7 @@ class GameSchema(Schema):
     range_max = fields.Int(required=True)
     secret_number = fields.Int(dump_only = True)
     is_over = fields.Boolean(dump_only = True)
+    user = fields.Nested("UserSchema", only=("id",), dump_only = True)
     rounds = fields.Nested(RoundSchema, many=True, dump_only = True)
     
     @validates_schema
@@ -31,5 +32,7 @@ class GameUpdateSchema(Schema):
 
 class UserSchema(Schema):
     id = fields.Int(dump_only=True)
-    username = fields.Str(required=True)
+    name = fields.Str(required=True)
     password = fields.Str(required=True, load_only=True)
+    games = fields.Nested(GameSchema, many=True, dump_only = True)
+    
