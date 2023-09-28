@@ -1,5 +1,7 @@
 """Default application settings"""
 import secrets
+from datetime import timedelta
+
 
 
 class DefaultConfig:
@@ -15,4 +17,4 @@ class DefaultConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = "postgresql://postgres:postgres@localhost:5432/flatiron_labs"
     JWT_SECRET_KEY = str(secrets.SystemRandom().getrandbits(128))
-    
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)

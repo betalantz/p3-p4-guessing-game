@@ -4,12 +4,13 @@ from flask_migrate import Migrate
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
 import warnings
+from sqlalchemy import select
 
 from db import db
+from models import TokenBlocklist
 from default_config import DefaultConfig
 from resources.game import blp as GameBlueprint
 from resources.user import blp as UserBlueprint
-from blocklist import BLOCKLIST
 
 app = Flask(__name__)
 app.config.from_object(DefaultConfig)
@@ -38,9 +39,13 @@ with app.app_context():
 # Create JWTManager
 jwt = JWTManager(app)
 
+# Callback function to check if a JWT exists in the database blocklist
 @jwt.token_in_blocklist_loader
-def check_if_token_in_blocklist(jwt_header, jwt_payload):
-    return jwt_payload["jti"] in BLOCKLIST
+def check_if_token_revoked(jwt_header, jwt_payload):
+    jti = jwt_payload["jti"]
+    token =  db.session.scalars(select(TokenBlocklist).where(TokenBlocklist.jti == jti)).first()
+    print(token)
+    return token is not None
 
 @jwt.revoked_token_loader
 def revoked_token_callback(jwt_header, jwt_payload):
@@ -53,14 +58,17 @@ def revoked_token_callback(jwt_header, jwt_payload):
 
 # Create the API
 api = Api(app)
+# Add authorize button to OpenAPI document
 api.spec.components.security_scheme(
     "bearerAuth", {"type":"http", "scheme": "bearer", "bearerFormat": "JWT"}
 )
+#Uncomment to add lock icon to all endpoints 
 #api.spec.options["security"] = [{"bearerAuth": []}]
+
 api.register_blueprint(GameBlueprint)
 api.register_blueprint(UserBlueprint)
 
-#add lock icon for jwt endpoints
+#add lock icon for endpoints documented with @blp.doc(authorize=True)
 for path, items in api.spec._paths.items():
         for method in items.keys():
             endpoint = api.spec._paths[path][method]
