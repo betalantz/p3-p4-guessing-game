@@ -21,6 +21,7 @@ blp = Blueprint("Users", "users", description="Operations on users")
 class UsersRegister(MethodView):
     @blp.arguments(UserSchema)
     def post(self, user_data):
+        """Add a new user."""
         #if User.query.filter(User.name == user_data["name"]).first():
         user =  db.session.scalars(select(User).where(User.name == user_data["name"])).first()
         if user:
@@ -39,6 +40,7 @@ class UsersRegister(MethodView):
 class UsersLogin(MethodView):
     @blp.arguments(UserSchema)
     def post(self, user_data):
+        """Create and return access token for registered user."""
         user =  db.session.scalars(select(User).where(User.name == user_data["name"])).first()
 
         if user and pbkdf2_sha256.verify(user_data["password"], user.password):
@@ -52,6 +54,7 @@ class UsersLogout(MethodView):
     @jwt_required()
     @blp.doc(authorize=True)
     def post(self):
+        """Revoke access token for authenticated user."""
         jti = get_jwt()["jti"]
         now = datetime.now(timezone.utc)
         db.session.add(TokenBlocklist(jti=jti, created_at=now))

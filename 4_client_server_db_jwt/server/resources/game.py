@@ -25,7 +25,7 @@ class Games(MethodView):
     @blp.arguments(GameSchema)
     @blp.response(201, GameSchema)
     def post(self, fields):
-        """Create a new game and 1st round of play for the current user"""
+        """Add a new game and 1st round of play for authenticated user."""
         try:
             user_id = get_jwt_identity()
             user = db.get_or_404(User, user_id)
@@ -47,7 +47,7 @@ class GamesById(MethodView):
     
     @blp.response(200, GameSchema)
     def get(self, game_id):
-        """Get game by id"""
+        """Get game by id."""
         return db.get_or_404(Game, game_id)
     
     @jwt_required()
@@ -55,7 +55,7 @@ class GamesById(MethodView):
     @blp.arguments(GameUpdateSchema)
     @blp.response(200, GameSchema)
     def patch(self, fields, game_id):
-        """Update game by id.  Update current round based on the guess. Authorization requires user to be game creator. """
+        """Update game by id for authenticated and authorized user."""
         game = db.get_or_404(Game, game_id)
         user_id = get_jwt_identity()
         if game.user_id != user_id:
@@ -77,7 +77,7 @@ class GamesById(MethodView):
     @blp.doc(authorize=True)
     @blp.response(204)
     def delete(self, game_id):
-        """Delete game and associated rounds by id.  Authorization requires user to be game creator."""
+        """Delete game by id for authenticated and authorized user."""
         game = db.get_or_404(Game, game_id)
         user_id = get_jwt_identity()
         if game.user_id != user_id:
