@@ -52,7 +52,7 @@ class UsersLogin(MethodView):
 
         if user and pbkdf2_sha256.verify(user_data["password"], user.password):
             access_token = create_access_token(identity=user.id)
-            resp = {"access_token": access_token}
+            resp = jsonify({"access_token": access_token})
 
             # Set the JWT access cookie in the response
             set_access_cookies(resp, access_token)
@@ -71,7 +71,7 @@ class UsersLogout(MethodView):
         now = datetime.now(timezone.utc)
         db.session.add(TokenBlocklist(jti=jti, created_at=now))
         db.session.commit()
-        resp = {"message": "JWT Revoked"}
+        resp = jsonify({"message": "JWT Revoked"})
         # B/c access cookie is httponly, it cannot be deleted by client-side JavaScript, so this helper function is provided to delete the cookie.
         unset_jwt_cookies(resp)
         return resp, 200

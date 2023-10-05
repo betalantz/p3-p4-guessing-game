@@ -21,3 +21,6 @@ class DefaultConfig:
     JWT_SECRET_KEY = str(secrets.SystemRandom().getrandbits(128))
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
     JWT_TOKEN_LOCATION = ["cookies"]
+    # Storing the tokens in cookies protects agains XSS attacks but is vulnerable to CSRF attacks.
+    # Best practice will be to set this to True, but it requires a CSRF token to be sent with every request.
+    JWT_COOKIE_CSRF_PROTECT = False
