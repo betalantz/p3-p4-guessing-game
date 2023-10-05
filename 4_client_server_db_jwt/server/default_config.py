@@ -3,9 +3,9 @@ import secrets
 from datetime import timedelta
 
 
-
 class DefaultConfig:
     """Default configuration"""
+
     API_TITLE = "Guessing Game API"
     API_VERSION = 0.1
     OPENAPI_VERSION = "3.0.3"
@@ -15,6 +15,9 @@ class DefaultConfig:
     PROPAGATE_EXCEPTIONS = True
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:postgres@localhost:5432/flatiron_labs"
+    SQLALCHEMY_DATABASE_URI = (
+        "postgresql://postgres:postgres@localhost:5432/flatiron_labs"
+    )
     JWT_SECRET_KEY = str(secrets.SystemRandom().getrandbits(128))
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+    JWT_TOKEN_LOCATION = ["cookies"]
