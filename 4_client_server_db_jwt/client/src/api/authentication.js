@@ -7,8 +7,7 @@ export const registerFetch = async (formData) => {
     },
   };
   const response = await fetch("/register", config);
-  const messageJSON = await response.json();
-  return messageJSON;
+  return response
 };
 
 export const loginFetch = async (formData) => {
@@ -20,6 +19,5 @@ export const loginFetch = async (formData) => {
     },
   };
   const response = await fetch("/login", config);
-  const tokenJSON = await response.json();
-  return tokenJSON;
+ return response
 };
