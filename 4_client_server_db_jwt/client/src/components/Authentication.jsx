@@ -4,12 +4,13 @@ import { TextField } from 'formik-mui';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../providers/authProvider';
-import React from 'react'
+import React, {useState} from 'react'
 
 export default function Authentication() {
 
     const { token } = useAuth();
     const navigate = useNavigate();
+    const { isSignup, setIsSignup } = useState(false);
 
     const formSchema = yup.object().shape({
         name: yup.string().required('Name is required'),
@@ -19,10 +20,14 @@ export default function Authentication() {
             .required('Password is required'),
     });
 
-    
+    const handleSubmit = (values) => {
+        
+    }
 
 
   return (
+    <>
+   
     <Formik
         initialValues={{
             name: '',
@@ -36,7 +41,7 @@ export default function Authentication() {
             }, 500);
         }}
     >
-        {({ submitForm, isSubmitting }) => (
+        {({ submitForm, isSubmitting, errors, touched }) => (
             <Form>
                 <Field
                     component={TextField}
@@ -45,6 +50,8 @@ export default function Authentication() {
                     label="Name"
                     variant="outlined"
                     fullWidth
+                    error={!!errors.name && touched.name}
+                    helperText={errors.name}
                 />
                 <br />
                 <Field
@@ -54,6 +61,8 @@ export default function Authentication() {
                     label="Password"
                     variant="outlined" 
                     fullWidth
+                    error={!!errors.password && touched.password}
+                    helperText={errors.password}
                 />
                 {isSubmitting && <LinearProgress />}
                 <br />
@@ -63,10 +72,12 @@ export default function Authentication() {
                     disabled={isSubmitting}
                     onClick={submitForm}
                     >
-                    Submit
+                    {isSignup ? 'Register' : 'Login'}
                     </Button>
             </Form>
         )}
     </Formik>
+    <p>If you don't have an account yet, click </p>
+    </>
   )
 }

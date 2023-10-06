@@ -40,3 +40,7 @@ ul {
   color: purple;
   padding-top: 1em;
 }
+
+form div {
+  margin: 10px 0;
+}
