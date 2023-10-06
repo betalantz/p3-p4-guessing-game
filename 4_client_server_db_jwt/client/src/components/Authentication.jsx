@@ -12,7 +12,7 @@ export default function Authentication() {
   const navigate = useNavigate();
   const [isSignup, setIsSignup] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const formSchema = yup.object().shape({
     name: yup.string().required("Name is required"),
@@ -23,36 +23,44 @@ export default function Authentication() {
   });
 
   const handleSubmit = async (values, setSubmitting) => {
-    setMessage('');
+    setMessage("");
     setIsError(false);
     if (isSignup) {
-      const res = registerFetch(values);
+      const res = await registerFetch(values);
       if (!res.ok) {
         setIsError(true);
-      } else {
-        setIsSignup(false);
-      }
-      const message = await res.json()
+      } 
+      const message = await res.json();
       setMessage(message);
     } else {
-        const res = await loginFetch(values);
-        const resJSON = await res.json();
-        if (!res.ok) {
-            setIsError(true);
-            setMessage(resJSON);
-        } else {
-            setToken(resJSON);
-            navigate("/");
-        }
+      const res = await loginFetch(values);
+      const resJSON = await res.json();
+      if (!res.ok) {
+        setIsError(true);
+        setMessage(resJSON);
+      } else {
+        setToken(resJSON);
+        navigate("/");
+      }
     }
     setSubmitting(false);
   };
 
   return (
     <>
-        <Snackbar anchorOrigin={{ vertical: "top", horizontal: "center"}} open={!!message} autoHideDuration={6000} onClose={() => setMessage('')}>
-            <Alert severity={isError ? "error" : "success"} onClose={() => setMessage('')}>{message.message}</Alert>
-        </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={!!message}
+        autoHideDuration={6000}
+        onClose={() => setMessage("")}
+      >
+        <Alert
+          severity={isError ? "error" : "success"}
+          onClose={() => setMessage("")}
+        >
+          {message.message}
+        </Alert>
+      </Snackbar>
       <Formik
         initialValues={{
           name: "",
@@ -60,9 +68,8 @@ export default function Authentication() {
         }}
         validationSchema={formSchema}
         onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(true);
+          setSubmitting(true);
           handleSubmit(values, setSubmitting);
-          
         }}
       >
         {({ submitForm, isSubmitting, errors, touched }) => (

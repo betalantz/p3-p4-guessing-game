@@ -11,6 +11,7 @@ import GameForm from "../components/GameForm";
 const Routes = () => {
     const { token } = useAuth();
 
+
     const routesForAuthenticated = [
         {
             path: "/",

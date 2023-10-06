@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../providers/authProvider';
+import NavMenu from '../components/NavMenu';
 
 export const ProtectedRoute = () => {
     const { token } = useAuth();
@@ -8,5 +9,10 @@ export const ProtectedRoute = () => {
         return <Navigate to="/login" />;
     }
 
-    return <Outlet />;
+    return (
+        <>
+            <NavMenu />
+            <Outlet />
+        </>
+    );
 }

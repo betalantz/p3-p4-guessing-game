@@ -3,15 +3,16 @@ import React from "react";
 import Header from "./components/Header";
 import Dashboard from "./components/Dashboard";
 import GameDetail from "./components/GameDetail";
-import AuthProvider from './providers/authProvider'
+import { useAuth } from './providers/authProvider'
 import Routes from './routes/Routes'
-import Menu from "./components/Menu";
+import NavMenu from "./components/NavMenu";
 
 function App() {
+
+  const { token } = useAuth();
+
   return (
     <div>
-      <AuthProvider>
-        <Menu />
         {/* <Header /> */}
         <main>
           <Routes>
@@ -20,7 +21,6 @@ function App() {
           </Routes>
         </main>
         <footer></footer>
-      </AuthProvider>
     </div>
   );
 }

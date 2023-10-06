@@ -1,3 +1,3 @@
-import { registerFetch, loginFetch } from './authentication'
+import { registerFetch, loginFetch, logoutFetch } from './authentication'
 
-export { registerFetch, loginFetch }
+export { registerFetch, loginFetch, logoutFetch }

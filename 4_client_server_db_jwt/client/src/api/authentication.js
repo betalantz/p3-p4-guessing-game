@@ -6,8 +6,8 @@ export const registerFetch = async (formData) => {
       "Content-Type": "application/json",
     },
   };
-  const response = await fetch("/register", config);
-  return response
+  return fetch("/register", config);
+  
 };
 
 export const loginFetch = async (formData) => {
@@ -18,6 +18,15 @@ export const loginFetch = async (formData) => {
       "Content-Type": "application/json",
     },
   };
-  const response = await fetch("/login", config);
- return response
+  return fetch("/login", config);
 };
+
+export const logoutFetch = async () => {
+  const config = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  return fetch("/logout", config);
+}
