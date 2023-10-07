@@ -14,7 +14,7 @@ export default function NavMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const { token, setToken } = useAuth();
+  const { setToken } = useAuth();
 
   const handleLogout = async () => {
     handleClose();

@@ -30,3 +30,7 @@ export const logoutFetch = async () => {
   };
   return fetch("/logout", config);
 }
+
+export const authenticateFetch = async () => {
+    return fetch("/authenticate");
+}
