@@ -8,7 +8,7 @@ import GameDetail from "../components/GameDetail";
 import GameForm from "../components/GameForm";
 
 
-const Routes = () => {
+const Routes = ({games, handleAddGame, handleDeleteGame}) => {
     const { token } = useAuth();
 
 
@@ -19,7 +19,7 @@ const Routes = () => {
             children: [
                 {
                     path: "/",
-                    element: <Dashboard />
+                    element: <Dashboard games={games} handleDeleteGame={handleDeleteGame}/>
                 },
                 {
                     path: "/games/:id",
@@ -27,7 +27,7 @@ const Routes = () => {
                 },
                 {
                     path: "/games/new",
-                    element: <GameForm />
+                    element: <GameForm onGameRequest={handleAddGame} />
                 },
             ]
         }
