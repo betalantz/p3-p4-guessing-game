@@ -14,7 +14,6 @@ from flask_jwt_extended import (
 )
 from flask_smorest import Blueprint, abort
 from models import TokenBlocklist, User
-from passlib.hash import pbkdf2_sha256
 from schemas import UserSchema
 from sqlalchemy import select
 
@@ -35,7 +34,7 @@ class UsersRegister(MethodView):
 
         user = User(
             name=user_data["name"],
-            password=pbkdf2_sha256.hash(user_data["password"]),
+            password=user_data["password"],
         )
         db.session.add(user)
         db.session.commit()
@@ -52,7 +51,7 @@ class UsersLogin(MethodView):
             select(User).where(User.name == user_data["name"])
         ).first()
 
-        if user and pbkdf2_sha256.verify(user_data["password"], user.password):
+        if user and user.authenticate(user_data["password"]):
             access_token = create_access_token(identity=user.id)
             resp = jsonify({"access_token": access_token})
 
