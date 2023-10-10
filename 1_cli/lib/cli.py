@@ -1,11 +1,10 @@
-
-from helpers import (
+from .helpers import (
     exit_program,
-    new_game,
-    list_games,
     list_game_by_id,
+    list_games,
     list_rounds,
-    list_rounds_by_game_id
+    list_rounds_by_game_id,
+    new_game,
 )
 
 
@@ -19,15 +18,16 @@ def main():
             case "1":
                 new_game()
             case "2":
-                list_games()    
+                list_games()
             case "3":
                 list_game_by_id()
             case "4":
                 list_rounds()
             case "5":
-                list_rounds_by_game_id()   
+                list_rounds_by_game_id()
             case _:
                 print("Invalid choice")
+
 
 def menu():
     print("Please select an option:")
@@ -37,6 +37,7 @@ def menu():
     print("3: List game by id")
     print("4: List all rounds")
     print("5: List rounds by game id")
+
 
 if __name__ == "__main__":
     main()
