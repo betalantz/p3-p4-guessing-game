@@ -10,13 +10,17 @@ class TestMain:
     The main function in cli.py
     """
 
-    @patch("builtins.input", side_effect=["0"])
-    def test_exit(self, input_mock):
+    @patch("lib.cli.exit_program", side_effect=SystemExit)
+    @patch("builtins.input", side_effect=["0", "0"])
+    def test_main_calls_exit_program(
+        self, input_mock, exit_program_mock
+    ):  # Note the order of the arguments
         """
-        calls exit_program by simulating user input "0".
+        calls exit_program when the first input is "0".
         """
         with pytest.raises(SystemExit):  # Expect the program to exit
             main()
+        exit_program_mock.assert_called_once()
 
     @patch("lib.cli.new_game")
     @patch("builtins.input", side_effect=["1", "0"])
