@@ -1,5 +1,6 @@
 import pytest
-from lib.helpers import exit_program
+from lib.helpers import exit_program, response_message
+from lib.models import GuessStatus
 
 
 class TestExitProgram:
@@ -32,15 +33,15 @@ class TestResponseMessage:
     @pytest.mark.parametrize(
         "status, expected",
         [
-            ("CORRECT", "1 is correct!"),
-            ("LOW", "1 is too low."),
-            ("HIGH", "1 is too high."),
-            ("INVALID", "1 is outside the range 1..1."),
+            (GuessStatus.CORRECT, "1 is correct!"),
+            (GuessStatus.LOW, "1 is too low."),
+            (GuessStatus.HIGH, "1 is too high."),
+            (GuessStatus.INVALID, "1 is outside the range 1..10."),
         ],
     )
-    def test_returns_correct_message(self, status, expected):
+    def test_returns_correct_message(self, test_round, status, expected):
         """
         returns the correct message based on the status.
         """
-        round = GuessRound(guess=1, status=status)
-        assert response_message(round) == expected
+        test_round.status = status
+        assert response_message(test_round) == expected
