@@ -1,20 +1,21 @@
-import unittest
 from io import StringIO
 from unittest.mock import patch
 
+import pytest
 from lib.cli import main, menu
 
 
-class TestMain(unittest.TestCase):
-
-    """The main function in cli.py"""
+class TestMain:
+    """
+    The main function in cli.py
+    """
 
     @patch("builtins.input", side_effect=["0"])
     def test_exit(self, input_mock):
         """
         calls exit_program by simulating user input "0".
         """
-        with self.assertRaises(SystemExit):  # Expect the program to exit
+        with pytest.raises(SystemExit):  # Expect the program to exit
             main()
 
     @patch("lib.cli.new_game")
@@ -45,19 +46,80 @@ class TestMain(unittest.TestCase):
             pass
         list_games_mock.assert_called_once()
 
+    @patch("lib.cli.list_game_by_id")
+    @patch("builtins.input", side_effect=["3", "0"])
+    def test_main_calls_list_game_by_id(
+        self, input_mock, list_game_by_id_mock
+    ):  # Note the order of the arguments
+        """
+        calls list_game_by_id when the first input is "3".
+        """
+        try:  # Catch SystemExit to avoid exiting the test
+            main()
+        except SystemExit:
+            pass
+        list_game_by_id_mock.assert_called_once()
 
-class TestMenu(unittest.TestCase):
+    @patch("lib.cli.list_rounds")
+    @patch("builtins.input", side_effect=["4", "0"])
+    def test_main_calls_list_rounds(
+        self, input_mock, list_rounds_mock
+    ):  # Note the order of the arguments
+        """
+        calls list_rounds when the first input is "4".
+        """
+        try:  # Catch SystemExit to avoid exiting the test
+            main()
+        except SystemExit:
+            pass
+        list_rounds_mock.assert_called_once()
+
+    @patch("lib.cli.list_rounds_by_game_id")
+    @patch("builtins.input", side_effect=["5", "0"])
+    def test_main_calls_list_rounds_by_game_id(
+        self, input_mock, list_rounds_by_game_id_mock
+    ):  # Note the order of the arguments
+        """
+        calls list_rounds_by_game_id when the first input is "5".
+        """
+        try:  # Catch SystemExit to avoid exiting the test
+            main()
+        except SystemExit:
+            pass
+        list_rounds_by_game_id_mock.assert_called_once()
+
+    @patch("sys.stdout", new_callable=StringIO)
+    @patch("builtins.input", side_effect=["z", "0"])
+    def test_main_catches_invalid_inputs(
+        self, input_mock, mock_stdout
+    ):  # Note the order of the arguments
+        """
+        prints "Invalid choice" when the first input is not "0", "1", "2", "3", "4", or "5".
+        """
+        try:  # Catch SystemExit to avoid exiting the test
+            main()
+        except SystemExit:
+            pass
+        output = mock_stdout.getvalue()
+        assert "Invalid choice" in output
+
+
+class TestMenu:
+    """
+    The menu function in cli.py
+    """
+
     @patch("sys.stdout", new_callable=StringIO)
     def test_menu(self, mock_stdout):
         """
-        Test the menu function by capturing its output.
+        prints the required output.
         """
         menu()
         output = mock_stdout.getvalue()
-        self.assertIn("Please select an option:", output)
-        self.assertIn("0. Exit the program", output)
-        self.assertIn("1. Play new game", output)
-        self.assertIn("2: List all games", output)
-        self.assertIn("3: List game by id", output)
-        self.assertIn("4: List all rounds", output)
-        self.assertIn("5: List rounds by game id", output)
+        assert "Please select an option:" in output
+        assert "0. Exit the program" in output
+        assert "1. Play new game" in output
+        assert "2: List all games" in output
+        assert "3: List game by id" in output
+        assert "4: List all rounds" in output
+        assert "5: List rounds by game id" in output
