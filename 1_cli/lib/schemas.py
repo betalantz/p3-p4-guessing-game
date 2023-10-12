@@ -13,6 +13,7 @@ from .models import DifficultyLevel, Game, GuessStatus, Round
 
 class RoundSchema(Schema):
     __model__ = Round
+    id = fields.Str(dump_only=True)
     # Use 'only' or 'exclude' to avoid infinite recursion with two-way nested fields.
     game = fields.Nested("GameSchema", only=("id",))
     range_min = fields.Int()

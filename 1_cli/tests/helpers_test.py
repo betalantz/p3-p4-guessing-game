@@ -1,7 +1,14 @@
 import pytest
-from lib.helpers import exit_program, list_games, new_game, response_message
+from lib.helpers import (
+    exit_program,
+    list_game_by_id,
+    list_games,
+    list_rounds,
+    new_game,
+    response_message,
+)
 from lib.models import Game, GuessStatus
-from lib.schemas import GameSchema
+from lib.schemas import GameSchema, RoundSchema
 from marshmallow import ValidationError
 
 
@@ -152,8 +159,44 @@ class TestNewGame:
         captured = capsys.readouterr()
         assert expected_error in captured.out
 
-    def test_list_games(test_game, capsys):
-        test_game_dict = GameSchema().dump(test_game)
-        list_games()
-        captured = capsys.readouterr()
-        assert str(test_game_dict["id"]) in captured.out
+
+def test_list_games(test_game, capsys):
+    """
+    The list_games function in helpers.py prints a list of games."""
+    test_game_dict = GameSchema().dump(test_game)
+    list_games()
+    captured = capsys.readouterr()
+    assert str(test_game_dict["id"]) in captured.out
+
+
+@pytest.mark.parametrize(
+    "input_id, expected_output",
+    [
+        (
+            lambda test_game_dict: test_game_dict["id"],
+            lambda test_game_dict: str(test_game_dict["id"]),
+        ),
+        (
+            lambda test_game_dict: test_game_dict["id"] + "1",
+            lambda test_game_dict: f"Game {test_game_dict['id']+'1'} not found",
+        ),
+    ],
+)
+def test_list_games_by_id(test_game, capsys, mocker, input_id, expected_output):
+    """
+    The list_game_by_id function in helpers.py prints a game by id or an error message for an invalid id.
+    """
+    test_game_dict = GameSchema().dump(test_game)
+    input_mock = mocker.patch("builtins.input", return_value=input_id(test_game_dict))
+    list_game_by_id()
+    captured = capsys.readouterr()
+    assert expected_output(test_game_dict) in captured.out
+
+
+def test_list_rounds(test_round, capsys):
+    """
+    The list_rounds function in helpers.py prints a list of rounds."""
+    test_round_dict = RoundSchema().dump(test_round)
+    list_rounds()
+    captured = capsys.readouterr()
+    assert str(test_round_dict["id"]) in captured.out
