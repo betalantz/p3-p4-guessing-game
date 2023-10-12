@@ -1,6 +1,6 @@
 import pytest
-from lib.helpers import exit_program, response_message
-from lib.models import GuessStatus
+from lib.helpers import exit_program, new_game, response_message
+from lib.models import Game, GuessStatus
 
 
 class TestExitProgram:
@@ -45,3 +45,46 @@ class TestResponseMessage:
         """
         test_round.status = status
         assert response_message(test_round) == expected
+
+
+class TestNewGame:
+    """
+    The new_game function in helpers.py
+    """
+
+    @pytest.mark.parametrize(
+        "inputs, expected",
+        [
+            (["easy", "1", "10", "5"], "5 is correct!"),
+            (["easy", "1", "10", "1", "5"], "5 is correct!"),
+            (["easy", "1", "10", "1", "2", "5"], "5 is correct!"),
+            (["easy", "1", "10", "1", "2", "3", "5"], "5 is correct!"),
+            (["easy", "1", "10", "10", "5"], "5 is correct!"),
+            (["easy", "1", "10", "10", "9", "5"], "5 is correct!"),
+            (["easy", "1", "10", "10", "9", "8", "5"], "5 is correct!"),
+            (["easy", "1", "10", "10", "9", "8", "7", "5"], "5 is correct!"),
+            (["easy", "1", "10", "10", "9", "8", "7", "6", "5"], "5 is correct!"),
+            (
+                ["easy", "1    ", "10", "5"],
+                "5 is correct!",
+            ),  # Test leading whitespace 1
+        ],
+    )
+    def test_easy_new_game(self, inputs, expected, capsys, mocker):
+        """
+        plays a game of "easy" difficulty and wins.
+        """
+        input_mock = mocker.patch("builtins.input", side_effect=inputs)
+        mocker.patch("lib.models.randint", return_value=5)  # Mock the secret number
+        new_game()
+        captured = capsys.readouterr()
+        output_lines = captured.out.splitlines()
+        for idx, input in list(enumerate(inputs)):
+            if idx > 2:
+                output_line = output_lines[idx - 3]
+                if int(input) < 5:
+                    assert "too low" in output_line
+                elif int(input) > 5:
+                    assert "too high" in output_line
+                elif input == "5":
+                    assert expected in output_line

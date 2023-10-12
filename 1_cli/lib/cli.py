@@ -1,4 +1,4 @@
-from .helpers import (
+from lib.helpers import (
     exit_program,
     list_game_by_id,
     list_games,
