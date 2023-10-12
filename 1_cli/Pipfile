@@ -14,3 +14,4 @@ pytest-mock = "*"
 python_full_version = "3.11.4"
 
 [dev-packages]
+ipdb = "*"

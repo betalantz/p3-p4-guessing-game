@@ -4,6 +4,7 @@ from lib.helpers import (
     list_game_by_id,
     list_games,
     list_rounds,
+    list_rounds_by_game_id,
     new_game,
     response_message,
 )
@@ -200,3 +201,27 @@ def test_list_rounds(test_round, capsys):
     list_rounds()
     captured = capsys.readouterr()
     assert str(test_round_dict["id"]) in captured.out
+
+
+@pytest.mark.parametrize(
+    "input_id, expected_output",
+    [
+        (
+            lambda test_round_dict: test_round_dict["game"]["id"],
+            lambda test_round_dict: str(test_round_dict["id"]),
+        ),
+        (
+            lambda test_round_dict: test_round_dict["game"]["id"] + "1",
+            lambda test_round_dict: f"Game {test_round_dict['game']['id']+'1'} not found",
+        ),
+    ],
+)
+def test_list_rounds_by_game_id(test_round, capsys, mocker, input_id, expected_output):
+    """
+    The list_rounds_by_game_id function in helpers.py prints the rounds belonging to a game by the game id or an error message for an invalid id.
+    """
+    test_round_dict = RoundSchema().dump(test_round)
+    input_mock = mocker.patch("builtins.input", return_value=input_id(test_round_dict))
+    list_rounds_by_game_id()
+    captured = capsys.readouterr()
+    assert expected_output(test_round_dict) in captured.out
