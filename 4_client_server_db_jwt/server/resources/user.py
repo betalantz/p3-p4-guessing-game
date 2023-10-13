@@ -7,10 +7,10 @@ from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
     get_jwt,
-    get_jwt_identity,
     jwt_required,
     set_access_cookies,
     unset_jwt_cookies,
+    current_user
 )
 from flask_smorest import Blueprint, abort
 from models import TokenBlocklist, User
@@ -25,10 +25,9 @@ class UsersRegister(MethodView):
     @blp.arguments(UserSchema)
     def post(self, user_data):
         """Add a new user."""
-        # if User.query.filter(User.name == user_data["name"]).first():
         user = db.session.scalars(
             select(User).where(User.name == user_data["name"])
-        ).first()
+        ).one_or_none()
         if user:
             abort(409, message="A user with that name already exists.")
 
@@ -49,10 +48,11 @@ class UsersLogin(MethodView):
         """Create and return access token for registered user."""
         user = db.session.scalars(
             select(User).where(User.name == user_data["name"])
-        ).first()
-
+        ).one_or_none()
         if user and user.authenticate(user_data["password"]):
-            access_token = create_access_token(identity=user.id)
+            # pass actual user object for automatic user loading, not just id
+            # access_token = create_access_token(identity=user.id)
+            access_token = create_access_token(identity=user)
             resp = jsonify({"access_token": access_token})
 
             # Set the JWT access cookie in the response
@@ -78,8 +78,10 @@ class UserAuthenticated(MethodView):
         # ).first()
         # if blocked:
         #     abort(401, message="Token has been revoked.")
-        user_id = get_jwt_identity()
-        access_token = create_access_token(identity=user_id)
+        
+        #user_id = get_jwt_identity()
+        #access_token = create_access_token(identity=user_id)
+        access_token = create_access_token(identity=current_user)
         resp = jsonify({"access_token": access_token})
         set_access_cookies(resp, access_token)
         return resp, 200
@@ -99,3 +101,11 @@ class UsersLogout(MethodView):
         # B/c access cookie is httponly, it cannot be deleted by client-side JavaScript, so this helper function is provided to delete the cookie.
         unset_jwt_cookies(resp)
         return resp, 200
+    
+@blp.route("/users")
+class UsersView(MethodView):
+    
+    @blp.response(200, UserSchema(many=True))
+    def get(self):
+        """List users"""
+        return db.session.scalars(db.select(User))

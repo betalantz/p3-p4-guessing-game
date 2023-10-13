@@ -7,49 +7,47 @@ import Dashboard from "../components/Dashboard";
 import GameDetail from "../components/GameDetail";
 import GameForm from "../components/GameForm";
 
+const Routes = () => {
+  const { token } = useAuth();
 
-const Routes = ({games, handleAddGame, handleDeleteGame}) => {
-    const { token } = useAuth();
-
-
-    const routesForAuthenticated = [
+  const routesForAuthenticated = [
+    {
+      path: "/",
+      element: <ProtectedRoute />,
+      children: [
         {
-            path: "/",
-            element: <ProtectedRoute />,
-            children: [
-                {
-                    path: "/",
-                    element: <Dashboard games={games} handleDeleteGame={handleDeleteGame}/>
-                },
-                {
-                    path: "/games/:id",
-                    element: <GameDetail />
-                },
-                {
-                    path: "/games/new",
-                    element: <GameForm onGameRequest={handleAddGame} />
-                },
-            ]
-        }
-    ];
-
-    const routesForUnauthenticated = [
-        {
-            path: "/",
-            element: <Navigate to="/login" />
+          path: "/dashboard",
+          element: <Dashboard />,
         },
         {
-            path: "/login",
-            element: <Authentication />
+          path: "/games/:id",
+          element: <GameDetail />,
         },
-    ];
+        {
+          path: "/games/new",
+          element: <GameForm />,
+        },
+      ],
+    },
+  ];
 
-    const router = createBrowserRouter([
-        ...(!token ? routesForUnauthenticated : []),
-        ...routesForAuthenticated
-    ])
+  const routesForUnauthenticated = [
+    {
+      path: "/",
+      element: <Navigate to="/login" />,
+    },
+    {
+      path: "/login",
+      element: <Authentication />,
+    },
+  ];
 
-    return <RouterProvider router={router} />;
-}
+  const router = createBrowserRouter([
+    ...(!token ? routesForUnauthenticated : []),
+    ...routesForAuthenticated,
+  ]);
+
+  return <RouterProvider router={router} />;
+};
 
 export default Routes;

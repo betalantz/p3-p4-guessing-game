@@ -29,7 +29,7 @@ export default function Authentication() {
       const res = await registerFetch(values);
       if (!res.ok) {
         setIsError(true);
-      } 
+      }
       const message = await res.json();
       setMessage(message);
     } else {
@@ -40,7 +40,7 @@ export default function Authentication() {
         setMessage(resJSON);
       } else {
         setToken(resJSON);
-        navigate("/");
+        navigate("/dashboard");
       }
     }
     setSubmitting(false);
@@ -116,7 +116,7 @@ export default function Authentication() {
         </p>
       ) : (
         <p>
-          If you don't need to Login, click{" "}
+          If you don't need to Register, click{" "}
           <Button onClick={() => setIsSignup(!isSignup)}>Login</Button> to log
           in.
         </p>

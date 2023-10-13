@@ -7,7 +7,6 @@ export const registerFetch = async (formData) => {
     },
   };
   return fetch("/register", config);
-  
 };
 
 export const loginFetch = async (formData) => {
@@ -29,8 +28,8 @@ export const logoutFetch = async () => {
     },
   };
   return fetch("/logout", config);
-}
+};
 
 export const authenticateFetch = async () => {
-    return fetch("/authenticate");
-}
+  return fetch("/authenticate");
+};

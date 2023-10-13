@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, redirect, jsonify
+from flask import Flask, redirect
 from flask_migrate import Migrate
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
@@ -7,7 +7,7 @@ import warnings
 from sqlalchemy import select
 
 from db import db
-from models import TokenBlocklist
+from models import TokenBlocklist, User
 from default_config import DefaultConfig
 from resources.game import blp as GameBlueprint
 from resources.user import blp as UserBlueprint
@@ -18,15 +18,6 @@ app.json.compact = False
 
 Migrate(app, db)
 db.init_app(app)
-
-# Ensure FOREIGN KEY for sqlite3
-if 'sqlite' in app.config['SQLALCHEMY_DATABASE_URI']:
-    def _fk_pragma_on_connect(dbapi_con, con_record):  # noqa
-        dbapi_con.execute('pragma foreign_keys=ON')
-
-    with app.app_context():
-        from sqlalchemy import event
-        event.listen(db.engine, 'connect', _fk_pragma_on_connect)
 
 # Prevent warnings about nested schemas
 with app.app_context():
@@ -43,21 +34,38 @@ jwt = JWTManager(app)
 @jwt.token_in_blocklist_loader
 def check_if_token_revoked(jwt_header, jwt_payload):
     jti = jwt_payload["jti"]
-    token =  db.session.scalars(select(TokenBlocklist).where(TokenBlocklist.jti == jti)).first()
-    print(token)
+    token =  db.session.scalars(
+        select(TokenBlocklist).where(TokenBlocklist.jti == jti)
+        ).one_or_none()
     return token is not None
 
 @jwt.revoked_token_loader
 def revoked_token_callback(jwt_header, jwt_payload):
-    return (
-        jsonify(
-            {"description": "The token has been revoked.", "error": "token_revoked"}
-        ),
-        401,
-    )
+    return {"description": "The token has been revoked.", "error": "token_revoked"},   401
+    
+# Register a callback function that takes whatever object is passed in as the
+# identity when creating JWTs and converts it to a JSON serializable format.
+@jwt.user_identity_loader
+def user_identity_lookup(user):
+    return user.id
+
+
+# Register a callback function that loads a user from the database whenever
+# a protected route is accessed.
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_payload):
+    identity = jwt_payload["sub"]    #subject of the jwt i.e. the user
+    return db.session.scalars(
+        select(User).where(User.id == identity)
+        ).one_or_none()
 
 # Create the API
 api = Api(app)
+
+# Register blueprints
+api.register_blueprint(GameBlueprint)
+api.register_blueprint(UserBlueprint)
+
 # Add authorize button to OpenAPI document
 api.spec.components.security_scheme(
     "bearerAuth", {"type":"http", "scheme": "bearer", "bearerFormat": "JWT"}
@@ -65,10 +73,7 @@ api.spec.components.security_scheme(
 #Uncomment to add lock icon to all endpoints 
 #api.spec.options["security"] = [{"bearerAuth": []}]
 
-api.register_blueprint(GameBlueprint)
-api.register_blueprint(UserBlueprint)
-
-#add lock icon for endpoints documented with @blp.doc(authorize=True)
+#add lock icon to endpoints documented with @blp.doc(authorize=True)
 for path, items in api.spec._paths.items():
         for method in items.keys():
             endpoint = api.spec._paths[path][method]

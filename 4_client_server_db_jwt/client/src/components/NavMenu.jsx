@@ -43,20 +43,17 @@ export default function NavMenu() {
         open={open}
         onClose={handleClose}
       >
-          <MenuItem onClick={handleClose}>
-            <Link component={RouterLink} to="/" underline="none">
-              Dashboard
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <Link component={RouterLink} to="/games/new" underline="none">
-              New Game
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={handleLogout}>
-            Logout
-          </MenuItem>
-    
+        <MenuItem onClick={handleClose}>
+          <Link component={RouterLink} to="/" underline="none">
+            Dashboard
+          </Link>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <Link component={RouterLink} to="/games/new" underline="none">
+            New Game
+          </Link>
+        </MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </div>
   );
