@@ -44,7 +44,7 @@ export default function NavMenu() {
         onClose={handleClose}
       >
         <MenuItem onClick={handleClose}>
-          <Link component={RouterLink} to="/" underline="none">
+          <Link component={RouterLink} to="/dashboard" underline="none">
             Dashboard
           </Link>
         </MenuItem>

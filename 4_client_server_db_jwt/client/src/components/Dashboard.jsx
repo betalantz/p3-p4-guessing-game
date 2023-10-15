@@ -1,35 +1,31 @@
-import React, { Suspense, useState, useEffect, useCallback } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 
 import GameCard from "./GameCard";
 import GridLoader from "react-spinners/GridLoader";
 
 function Dashboard() {
   const [games, setGames] = useState([]);
-  const [isError, setIsError] = useState(false);
-  const [message, setMessage] = useState("");
-
-  const fetchGames = useCallback(async () => {
-    const response = await fetch("/games");
-    if (response.ok) {
-      const gamesJSON = await response.json();
-      setGames(gamesJSON);
-      setIsError(false);
-      setMessage("");
-    } else {
-      const err = await response.json();
-      setGames([]);
-      setIsError(true);
-      setMessage(err);
-    }
-  }, []);
 
   useEffect(() => {
-    fetchGames().catch(console.error);
-  }, [fetchGames]);
+    const fetchGames = async () => {
+      const res = await fetch("/games");
+      if (res.ok) {
+        const gamesJSON = await res.json();
+        setGames(gamesJSON);
+      } else {
+        setGames([]);
+        //add error display
+      }
+    };
 
+    fetchGames();
+  }, []);
+
+  /*
   function handleAddGame(newGame) {
     setGames((games) => [...games, newGame]);
   }
+  */
 
   function handleDeleteGame(id) {
     fetch(`/games/${id}`, { method: "DELETE" }).then((r) => {
@@ -49,7 +45,6 @@ function Dashboard() {
         <h1>Your Games</h1>
         <div className="gameList">{gameCards}</div>
       </Suspense>
-      {isError && <p style={{ color: "red" }}>{message}</p>}
     </>
   );
 }

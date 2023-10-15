@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Snackbar, Alert } from "@mui/material";
 
-export default function GameForm({ onGameRequest }) {
+export default function GameForm() {
   const [formData, setFormData] = useState({
     difficulty: "easy",
     range_min: 1,
     range_max: 100,
   });
-  const [errors, setErrors] = useState([]);
+  const [isError, setIsError] = useState(false);
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   async function postGame() {
@@ -19,19 +21,13 @@ export default function GameForm({ onGameRequest }) {
       body: JSON.stringify(formData),
     };
     const res = await fetch("/games", config);
+    const message = await res.json();
+    setMessage(message);
+    setIsError(!res.ok);
     if (res.ok) {
-      const newGame = await res.json();
-      onGameRequest(newGame);
-      setFormData({
-        difficulty: "easy",
-        range_min: 1,
-        range_max: 100,
-      });
-      setErrors([]);
-      navigate("/");
-    } else {
-      const messages = await res.json();
-      setErrors([JSON.stringify(messages.errors)]);
+      //onGameRequest(newGame);
+      //navigate("/dashboard");
+      //navigate("/");
     }
   }
 
@@ -48,7 +44,7 @@ export default function GameForm({ onGameRequest }) {
   }
 
   return (
-    <section>
+    <>
       <form onSubmit={handleSubmit}>
         <h2>New Game</h2>
         <div>
@@ -86,13 +82,21 @@ export default function GameForm({ onGameRequest }) {
             onChange={handleChange}
           />
         </div>
-        {errors.map((err) => (
-          <p key={err} style={{ color: "red" }}>
-            {err}
-          </p>
-        ))}
         <button type="submit">Submit</button>
       </form>
-    </section>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={!!message}
+        autoHideDuration={6000}
+        onClose={() => setMessage("")}
+      >
+        <Alert
+          severity={isError ? "error" : "success"}
+          onClose={() => setMessage("")}
+        >
+          {message.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
