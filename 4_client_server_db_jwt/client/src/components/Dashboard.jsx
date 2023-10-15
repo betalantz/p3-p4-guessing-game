@@ -14,18 +14,11 @@ function Dashboard() {
         setGames(gamesJSON);
       } else {
         setGames([]);
-        //add error display
       }
     };
 
     fetchGames();
   }, []);
-
-  /*
-  function handleAddGame(newGame) {
-    setGames((games) => [...games, newGame]);
-  }
-  */
 
   function handleDeleteGame(id) {
     fetch(`/games/${id}`, { method: "DELETE" }).then((r) => {

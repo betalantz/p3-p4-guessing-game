@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Snackbar, Alert } from "@mui/material";
+import { newGameFetch } from "../api";
+import StatusDetail from "./StatusDetail";
 
 export default function GameForm() {
   const [formData, setFormData] = useState({
@@ -13,21 +15,20 @@ export default function GameForm() {
   const navigate = useNavigate();
 
   async function postGame() {
-    const config = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    };
-    const res = await fetch("/games", config);
-    const message = await res.json();
-    setMessage(message);
+    setMessage("");
+    setIsError(false);
+    const res = await newGameFetch(formData);
     setIsError(!res.ok);
     if (res.ok) {
-      //onGameRequest(newGame);
+      const message = await res.json();
+      console.log(message);
+      setMessage({ message: "New game added." });
       //navigate("/dashboard");
-      //navigate("/");
+    } else {
+      const { code, errors, status } = await res.json();
+      setMessage({
+        message: "Error adding game. " + JSON.stringify(errors),
+      });
     }
   }
 
@@ -84,19 +85,13 @@ export default function GameForm() {
         </div>
         <button type="submit">Submit</button>
       </form>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={!!message}
-        autoHideDuration={6000}
-        onClose={() => setMessage("")}
-      >
-        <Alert
-          severity={isError ? "error" : "success"}
-          onClose={() => setMessage("")}
-        >
-          {message.message}
-        </Alert>
-      </Snackbar>
+      {message ? (
+        <StatusDetail
+          message={message}
+          isError={isError}
+          onCloseHandler={() => setMessage("")}
+        />
+      ) : null}
     </>
   );
 }

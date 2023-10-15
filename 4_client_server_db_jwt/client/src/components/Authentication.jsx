@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/authProvider";
 import React, { useState } from "react";
 import { registerFetch, loginFetch } from "../api";
+import StatusDetail from "./StatusDetail";
 
 export default function Authentication() {
   const { setToken } = useAuth();
@@ -48,19 +49,13 @@ export default function Authentication() {
 
   return (
     <>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={!!message}
-        autoHideDuration={6000}
-        onClose={() => setMessage("")}
-      >
-        <Alert
-          severity={isError ? "error" : "success"}
-          onClose={() => setMessage("")}
-        >
-          {message.message}
-        </Alert>
-      </Snackbar>
+      {message ? (
+        <StatusDetail
+          message={message}
+          isError={isError}
+          onCloseHandler={() => setMessage("")}
+        />
+      ) : null}
       <Formik
         initialValues={{
           name: "",
