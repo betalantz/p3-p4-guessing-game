@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Snackbar, Alert } from "@mui/material";
+//import { useNavigate } from "react-router-dom";
 import { newGameFetch } from "../api";
 import StatusDetail from "./StatusDetail";
 
@@ -12,22 +11,20 @@ export default function GameForm() {
   });
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   async function postGame() {
     setMessage("");
     setIsError(false);
     const res = await newGameFetch(formData);
-    setIsError(!res.ok);
     if (res.ok) {
-      const message = await res.json();
-      console.log(message);
       setMessage({ message: "New game added." });
       //navigate("/dashboard");
     } else {
-      const { code, errors, status } = await res.json();
+      const err = await res.json();
+      setIsError(true);
       setMessage({
-        message: "Error adding game. " + JSON.stringify(errors),
+        message: "Error adding game. " + JSON.stringify(err.errors),
       });
     }
   }
