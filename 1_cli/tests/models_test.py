@@ -87,3 +87,57 @@ class TestDifficultyLevel:
         assert isinstance(DifficultyLevel.EASY.value, str)
         assert isinstance(DifficultyLevel.HARD.value, str)
         assert DifficultyLevel.EASY.value != DifficultyLevel.HARD.value
+
+
+class TestRound:
+    """
+    The Round class in models.py
+    """
+
+    def test_all(self):
+        """
+        has an attribute called all that is a list.
+        """
+        assert hasattr(Round, "all")
+        assert isinstance(Round.all, list)
+
+    def test_all_starts_empty(self):
+        """
+        all is an empty list.
+        """
+        assert Round.all == []
+
+    def test_init(self, test_game, test_round):
+        """
+        initializes with a game, range_min, and range_max.
+        """
+        assert test_round.game == test_game
+        assert test_round.range_min == 1
+        assert test_round.range_max == 10
+
+    def test_init_adds_to_all(self, test_round):
+        """
+        adds itself to the all list.
+        """
+        assert test_round in Round.all
+
+    def test_init_assigns_unique_id(self, test_round):
+        """
+        assigns a unique id.
+        """
+        assert test_round.id is not None
+        assert test_round.id != ""
+
+    def test_init_assigns_id_as_string(self, test_round):
+        """
+        assigns the id as a string.
+        """
+        assert isinstance(test_round.id, str)
+
+    def test_init_assigns_unique_id_each_time(self, test_game):
+        """
+        assigns a unique id each time.
+        """
+        round1 = Round(test_game, 1, 10)
+        round2 = Round(test_game, 1, 10)
+        assert round1.id != round2.id
