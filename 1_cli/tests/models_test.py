@@ -242,4 +242,4 @@ class TestGame:
         assert test_game.is_over
         with pytest.raises(Exception) as e:
             test_game.play_round(1)
-            assert str(e.value) == "Game is over."
+        assert str(e.value) == "Game is over."
