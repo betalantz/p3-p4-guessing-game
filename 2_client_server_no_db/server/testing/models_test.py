@@ -194,7 +194,7 @@ class TestGame:
         """
         assigns a secret number between range_min and range_max.
         """
-        mocker.patch("lib.models.randint", return_value=5)
+        mocker.patch("models.randint", return_value=5)
         game = Game("easy", 1, 10)
         assert game.secret_number == 5
 

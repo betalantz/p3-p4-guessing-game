@@ -10,6 +10,7 @@ marshmallow = "3.20.1"
 importlib-metadata = "6.0.0"
 importlib-resources = "5.10.0"
 pytest = "*"
+pytest-mock = "*"
 
 [requires]
 python_full_version = "3.11.4"
