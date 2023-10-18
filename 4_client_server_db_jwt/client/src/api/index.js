@@ -4,12 +4,21 @@ import {
   logoutFetch,
   authenticateFetch,
 } from "./authentication";
-import { gamesFetch, newGameFetch } from "./game";
+import {
+  gamesFetch,
+  postGamesFetch,
+  patchGamesFetch,
+  gamesByIdFetch,
+  deleteGamesByIdFetch,
+} from "./game";
 export {
   registerFetch,
   loginFetch,
   logoutFetch,
   authenticateFetch,
   gamesFetch,
-  newGameFetch,
+  postGamesFetch,
+  patchGamesFetch,
+  gamesByIdFetch,
+  deleteGamesByIdFetch,
 };

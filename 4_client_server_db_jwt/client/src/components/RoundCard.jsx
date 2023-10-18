@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Stack from "@mui/material/Stack";
 import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
+import { patchGamesFetch } from "../api";
 
 function RoundCard({ round, onGuessRequest }) {
   const [isCurrentRound, setIsCurrentRound] = useState(false);
@@ -49,17 +50,11 @@ function RoundCard({ round, onGuessRequest }) {
   }, [round, isCurrentRound]);
 
   async function updateGame() {
-    const updateData = {
+    const formData = {
       guess: parseInt(guess),
     };
-    const config = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updateData),
-    };
-    const res = await fetch(`/games/${round.game.id}`, config);
+    const res = await patchGamesFetch(formData, round);
+
     if (res.ok) {
       const updGame = await res.json();
       onGuessRequest(updGame);

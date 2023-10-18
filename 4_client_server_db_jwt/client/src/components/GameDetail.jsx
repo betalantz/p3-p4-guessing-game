@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import RoundCard from "./RoundCard";
+import { gamesByIdFetch } from "../api";
 
 function GameDetail() {
   const [game, setGame] = useState({ secret_number: 0 });
@@ -9,14 +10,15 @@ function GameDetail() {
   const { id } = useParams();
 
   const fetchGame = useCallback(async () => {
-    const response = await fetch(`/games/${id}`);
-    if (response.ok) {
-      const gameJSON = await response.json();
+    const res = await gamesByIdFetch(id);
+
+    if (res.ok) {
+      const gameJSON = await res.json();
       setGame(gameJSON);
       setError(null);
       setStatus("resolved");
     } else {
-      const err = await response.json();
+      const err = await res.json();
       setGame(null);
       setError(err);
       setStatus("rejected");
