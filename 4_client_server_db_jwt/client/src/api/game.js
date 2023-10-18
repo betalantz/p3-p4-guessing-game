@@ -31,3 +31,7 @@ export const patchGamesFetch = async (formData, round) => {
   };
   return fetch(`/games/${round.game.id}`, config);
 };
+
+export const roundsByGameIdFetch = async (id) => {
+  return fetch(`/games/${id}/rounds`);
+};
