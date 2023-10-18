@@ -48,11 +48,10 @@ class TestApp:
             assert response.status_code == 302
             assert response.headers["Location"] == "/swagger-ui"
 
-    def test_game_blueprint(self):
+    def test_game_blueprint_get(self):
         """
-        GameBlueprint is correctly registered.
+        GameBlueprint has a GET route for '/games'.
         """
         with app.test_client() as client:
-            # Replace '/game' with a route defined in GameBlueprint
             response = client.get("/games")
-            assert response.status_code != 404
+            assert response.status_code not in range(400, 599)
