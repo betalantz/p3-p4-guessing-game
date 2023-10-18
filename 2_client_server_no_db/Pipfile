@@ -7,9 +7,9 @@ name = "pypi"
 flask = "2.3.3"
 flask-smorest = "0.42.1"
 marshmallow = "3.20.1"
-
 importlib-metadata = "6.0.0"
 importlib-resources = "5.10.0"
+pytest = "*"
 
 [requires]
 python_full_version = "3.11.4"
