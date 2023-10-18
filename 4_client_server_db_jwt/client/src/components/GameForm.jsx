@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 //import { useNavigate } from "react-router-dom";
-import { newGameFetch } from "../api";
+import { postGamesFetch } from "../api";
 import StatusDetail from "./StatusDetail";
 
 export default function GameForm() {
@@ -16,7 +16,7 @@ export default function GameForm() {
   async function postGame() {
     setMessage("");
     setIsError(false);
-    const res = await newGameFetch(formData);
+    const res = await postGamesFetch(formData);
     if (res.ok) {
       setMessage({ message: "New game added." });
       //navigate("/dashboard");

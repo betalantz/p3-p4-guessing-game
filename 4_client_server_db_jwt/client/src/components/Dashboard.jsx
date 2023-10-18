@@ -2,7 +2,7 @@ import React, { Suspense, useState, useEffect } from "react";
 
 import GameCard from "./GameCard";
 import GridLoader from "react-spinners/GridLoader";
-import { gamesFetch } from "../api";
+import { gamesFetch, deleteGamesByIdFetch } from "../api";
 import StatusDetail from "./StatusDetail";
 
 function Dashboard() {
@@ -31,16 +31,22 @@ function Dashboard() {
     fetchGames();
   }, []);
 
-  function handleDeleteGame(id) {
-    fetch(`/games/${id}`, { method: "DELETE" }).then((r) => {
-      if (r.ok) {
-        setGames((games) => games.filter((games) => games.id !== id));
-      }
-    });
+  async function deleteGame(id) {
+    const res = await deleteGamesByIdFetch(id);
+    if (res.ok) {
+      setGames((games) => games.filter((games) => games.id !== id));
+    } else {
+      const err = await res.json();
+      setGames([]);
+      setIsError(true);
+      setMessage({
+        message: "Error deleting game. " + JSON.stringify(err.errors),
+      });
+    }
   }
 
   let gameCards = games.map((game) => (
-    <GameCard key={game.id} game={game} onDelete={handleDeleteGame} />
+    <GameCard key={game.id} game={game} onDelete={deleteGame} />
   ));
 
   return (
