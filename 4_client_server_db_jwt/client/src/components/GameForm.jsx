@@ -4,11 +4,14 @@ import { postGamesFetch } from "../api";
 import StatusDetail from "./StatusDetail";
 
 export default function GameForm() {
-  const [formData, setFormData] = useState({
-    difficulty: "easy",
-    range_min: 1,
-    range_max: 100,
-  });
+  function initFormData() {
+    return {
+      difficulty: "easy",
+      range_min: 1,
+      range_max: 100,
+    };
+  }
+  const [formData, setFormData] = useState(initFormData());
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState("");
   //const navigate = useNavigate();
@@ -19,6 +22,7 @@ export default function GameForm() {
     const res = await postGamesFetch(formData);
     if (res.ok) {
       setMessage({ message: "New game added." });
+      setFormData(initFormData());
       //navigate("/dashboard");
     } else {
       const err = await res.json();
