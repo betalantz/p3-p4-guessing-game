@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/authProvider";
 import React, { useState } from "react";
 import { registerFetch, loginFetch } from "../api";
+import StatusDetail from "./StatusDetail";
 
 export default function Authentication() {
   const { setToken } = useAuth();
@@ -29,7 +30,7 @@ export default function Authentication() {
       const res = await registerFetch(values);
       if (!res.ok) {
         setIsError(true);
-      } 
+      }
       const message = await res.json();
       setMessage(message);
     } else {
@@ -40,7 +41,7 @@ export default function Authentication() {
         setMessage(resJSON);
       } else {
         setToken(resJSON);
-        navigate("/");
+        navigate("/dashboard");
       }
     }
     setSubmitting(false);
@@ -48,19 +49,13 @@ export default function Authentication() {
 
   return (
     <>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={!!message}
-        autoHideDuration={6000}
-        onClose={() => setMessage("")}
-      >
-        <Alert
-          severity={isError ? "error" : "success"}
-          onClose={() => setMessage("")}
-        >
-          {message.message}
-        </Alert>
-      </Snackbar>
+      {message ? (
+        <StatusDetail
+          message={message}
+          isError={isError}
+          onCloseHandler={() => setMessage("")}
+        />
+      ) : null}
       <Formik
         initialValues={{
           name: "",
@@ -116,7 +111,7 @@ export default function Authentication() {
         </p>
       ) : (
         <p>
-          If you don't need to Login, click{" "}
+          If you don't need to Register, click{" "}
           <Button onClick={() => setIsSignup(!isSignup)}>Login</Button> to log
           in.
         </p>

@@ -1,37 +1,31 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
+import { newGameFetch } from "../api";
+import StatusDetail from "./StatusDetail";
 
-export default function GameForm({ onGameRequest }) {
+export default function GameForm() {
   const [formData, setFormData] = useState({
     difficulty: "easy",
     range_min: 1,
     range_max: 100,
   });
-  const [errors, setErrors] = useState([]);
-  const navigate = useNavigate();
+  const [isError, setIsError] = useState(false);
+  const [message, setMessage] = useState("");
+  //const navigate = useNavigate();
 
   async function postGame() {
-    const config = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    };
-    const res = await fetch("/games", config);
+    setMessage("");
+    setIsError(false);
+    const res = await newGameFetch(formData);
     if (res.ok) {
-      const newGame = await res.json();
-      onGameRequest(newGame);
-      setFormData({
-        difficulty: "easy",
-        range_min: 1,
-        range_max: 100,
-      });
-      setErrors([]);
-      navigate("/");
+      setMessage({ message: "New game added." });
+      //navigate("/dashboard");
     } else {
-      const messages = await res.json();
-      setErrors([JSON.stringify(messages.errors)]);
+      const err = await res.json();
+      setIsError(true);
+      setMessage({
+        message: "Error adding game. " + JSON.stringify(err.errors),
+      });
     }
   }
 
@@ -48,7 +42,7 @@ export default function GameForm({ onGameRequest }) {
   }
 
   return (
-    <section>
+    <>
       <form onSubmit={handleSubmit}>
         <h2>New Game</h2>
         <div>
@@ -86,13 +80,15 @@ export default function GameForm({ onGameRequest }) {
             onChange={handleChange}
           />
         </div>
-        {errors.map((err) => (
-          <p key={err} style={{ color: "red" }}>
-            {err}
-          </p>
-        ))}
         <button type="submit">Submit</button>
       </form>
-    </section>
+      {message ? (
+        <StatusDetail
+          message={message}
+          isError={isError}
+          onCloseHandler={() => setMessage("")}
+        />
+      ) : null}
+    </>
   );
 }

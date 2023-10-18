@@ -32,7 +32,7 @@ function GameDetail() {
   }
 
   if (status === "pending") return <h2>Loading...</h2>;
-  if (status === "rejected") return <h2>Error: {error.error}</h2>;
+  if (status === "rejected") return <h2>Error: {error}</h2>;
 
   return (
     <div>
