@@ -1,6 +1,6 @@
 import pytest
 from app import app
-from schemas import GameSchema
+from schemas import GameSchema, RoundSchema
 
 
 class TestGames:
@@ -128,3 +128,41 @@ class TestGamesById:
             next_response = client.get("/games")
             assert next_response.status_code == 200
             assert next_response.json == []
+
+
+class TestRounds:
+    """
+    The Rounds class in view.py
+
+    """
+
+    def test_rounds_get(self, test_game):
+        """
+        has a GET route for '/rounds'.
+        """
+        with app.test_client() as client:
+            response = client.get("/rounds")
+            assert response.status_code == 200
+            assert response.json == [
+                RoundSchema().dump(round) for round in test_game.get_rounds()
+            ]
+
+    def test_rounds_get_empty(self):
+        """
+        GET route for '/rounds' returns an empty list if there are no rounds.
+        """
+        with app.test_client() as client:
+            response = client.get("/rounds")
+            assert response.status_code == 200
+            assert response.json == []
+
+    def test_rounds_get_by_game_id(self, test_game):
+        """
+        has a GET route for '/games/<string:game_id>/rounds'.
+        """
+        with app.test_client() as client:
+            response = client.get(f"/games/{test_game.id}/rounds")
+            assert response.status_code == 200
+            assert response.json == [
+                RoundSchema().dump(round) for round in test_game.get_rounds()
+            ]
