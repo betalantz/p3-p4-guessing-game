@@ -156,6 +156,12 @@ class TestRounds:
             assert response.status_code == 200
             assert response.json == []
 
+
+class TestRoundsByGameId:
+    """
+    The RoundsByGameId class in view.py
+    """
+
     def test_rounds_get_by_game_id(self, test_game):
         """
         has a GET route for '/games/<string:game_id>/rounds'.
@@ -166,3 +172,13 @@ class TestRounds:
             assert response.json == [
                 RoundSchema().dump(round) for round in test_game.get_rounds()
             ]
+            assert len(response.json) == len(test_game.get_rounds())
+
+    def test_rounds_get_by_game_id_invalid_id(self):
+        """
+        GET route for '/games/<string:game_id>/rounds' returns a 404 error if the game id is invalid.
+        """
+        with app.test_client() as client:
+            response = client.get("/games/invalid_id/rounds")
+            assert response.status_code == 404
+            assert response.json["message"] == "Game invalid_id not found."
