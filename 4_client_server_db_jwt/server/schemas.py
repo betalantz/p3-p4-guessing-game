@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, validates_schema, ValidationError, validate
+from marshmallow import Schema, fields, validates_schema, ValidationError, validate, pre_dump
 from models import DifficultyLevel, GuessStatus
     
 class RoundSchema(Schema):
@@ -22,8 +22,14 @@ class GameSchema(Schema):
     user_id = fields.Int(dump_only = True)
     #rounds = fields.Nested(RoundSchema, many=True, dump_only = True)
     number_of_rounds = fields.Function(lambda obj: len(obj.rounds), dump_only = True)
+    current_round = fields.Nested(RoundSchema, dump_only = True)
     
-    
+    # Compute current round prior to serialization
+    @pre_dump()
+    def get_data(self, data, **kwargs):
+        data.current_round = data.current_round()
+        return data
+        
     @validates_schema
     def validate_range(self, data, **kwargs):
         range_min = data["range_min"]
@@ -31,7 +37,7 @@ class GameSchema(Schema):
         if range_min > range_max:
             raise ValidationError(f"error: range_min {range_min} is greater than range_max {range_max}")    
 
-class RoundUpdateSchema(Schema):
+class GameUpdateSchema(Schema):
     guess = fields.Int(required=True)
 
 class UserSchema(Schema):

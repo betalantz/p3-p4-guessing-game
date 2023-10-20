@@ -22,7 +22,8 @@ class Game(db.Model):
  
     rounds = db.relationship(
         "Round", back_populates="game", cascade="all, delete-orphan")
-
+    
+    
     __table_args__ = (
         db.CheckConstraint("range_min <= range_max", name="min_max_range"),
     )
@@ -32,7 +33,7 @@ class Game(db.Model):
     
     def new_round(self):
         if self.is_over:
-            raise RuntimeError(f"Error adding new round. Game {self.id} is over.")
+            raise RuntimeError(f"Error creating new round. Game {self.id} is over.")
         if self.rounds:
             #create next round based on current round
             round = self.current_round()
@@ -49,3 +50,15 @@ class Game(db.Model):
         else:
             #create 1st round
             return Round(game = self, range_min = self.range_min, range_max = self.range_max, number =  1)            
+
+    def update(self, guess):
+            """Update the current round based on the guess"""
+            if self.is_over: 
+                raise RuntimeError(f"Error updating current round. Game {self.id} is over.")
+            if self.rounds:
+                round = self.current_round()
+                round.update(guess)
+                if round.status == GuessStatus.CORRECT:
+                    self.is_over = True
+            else:
+                raise RuntimeError(f"Error updating game {self.id}. Game does not contain a round to update.")
