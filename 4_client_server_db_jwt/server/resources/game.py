@@ -7,8 +7,8 @@ from flask_jwt_extended import (
 from sqlalchemy.exc import SQLAlchemyError
 
 from db import db
-from models import Round, Game
-from schemas import GameSchema, GameUpdateSchema, RoundSchema
+from models import Game
+from schemas import GameSchema, RoundSchema
 
 blp = Blueprint("Games", "games", description="Operations on games")
 
@@ -29,13 +29,13 @@ class Games(MethodView):
     @blp.arguments(GameSchema)
     @blp.response(201, GameSchema)
     def post(self, fields):
-        """Add a new game and 1st round of play for authenticated user."""
+        """Add a new game and 1st round for authenticated user."""
         try:
             game = Game(**fields)
             game.user = current_user
             db.session.add(game)
             db.session.commit()
-            round = Round(game = game, range_min = game.range_min, range_max = game.range_max)
+            round = game.new_round()
             db.session.add(round)
             db.session.commit()
         except SQLAlchemyError as err:
@@ -59,28 +59,6 @@ class GamesById(MethodView):
     
     @jwt_required()
     @blp.doc(authorize=True)
-    @blp.arguments(GameUpdateSchema)
-    @blp.response(200, GameSchema)
-    def patch(self, fields, game_id):
-        """Update game by id for authorized user."""
-        game = db.get_or_404(Game, game_id)
-        if game.user_id != current_user.id:
-            abort(403, message=f"You do not have permission to modify Game {game_id}.") 
-        if game.is_over:
-            abort(409, message=f"Game {game_id} is over.")
-        try:
-            next_round = game.play_round(fields["guess"])
-            if next_round:
-                db.session.add(next_round)
-            db.session.commit()  #commit status of last round and possible new round
-        except SQLAlchemyError as err:
-            db.session.rollback()
-            abort(400, game=err.__class__.__name__,
-                  errors=[str(x) for x in err.args])
-        return game
-    
-    @jwt_required()
-    @blp.doc(authorize=True)
     @blp.response(204)
     def delete(self, game_id):
         """Delete game by id for authorized user."""
@@ -96,16 +74,49 @@ class GamesById(MethodView):
                   errors=[str(x) for x in err.args]) 
 
 @blp.route("/games/<int:game_id>/rounds")
-class RoundsByGameId(MethodView):
+class GameRounds(MethodView):
     
     @jwt_required()
     @blp.doc(authorize=True)
     @blp.response(200, RoundSchema(many=True))
     def get(self, game_id):
-        """Get rounds by game id for authorized user."""
+        """List rounds by game id for authorized user."""
         game = db.get_or_404(Game, game_id)
         if game.user_id != current_user.id:
             abort(403, message=f"You do not have permission to access Game {game_id}.") 
         
         return game.rounds
-  
+    
+@blp.route("/games/<int:game_id>/round")
+class GameCurrentRound(MethodView):
+    
+    @jwt_required()
+    @blp.doc(authorize=True)
+    @blp.response(200, RoundSchema)
+    def get(self, game_id):
+        """List current round by game id for authorized user."""
+        game = db.get_or_404(Game, game_id)
+        if game.user_id != current_user.id:
+            abort(403, message=f"You do not have permission to access Game {game_id}.") 
+        
+        return game.current_round() 
+    
+    @jwt_required()
+    @blp.doc(authorize=True)
+    @blp.response(200, RoundSchema)
+    def post(self, game_id):
+        """Add next round by game id for authorized user."""
+        game = db.get_or_404(Game, game_id)
+        if game.user_id != current_user.id:
+            abort(403, message=f"You do not have permission to modify game {game_id}.") 
+        try:
+            round = game.new_round()
+            db.session.add(round)
+            db.session.commit()
+            return round
+        except SQLAlchemyError as err:
+            db.session.rollback()
+            abort(400, game=err.__class__.__name__,
+                  errors=[str(x) for x in err.args]) 
+        except RuntimeError as err:
+            abort(409, message=str(err))

@@ -1,12 +1,13 @@
 from marshmallow import Schema, fields, validates_schema, ValidationError, validate
 from models import DifficultyLevel, GuessStatus
-
+    
 class RoundSchema(Schema):
-    # Use 'only' or 'exclude' to avoid infinite recursion with two-way nested fields.
     id = fields.Int(dump_only = True)
-    game = fields.Nested("GameSchema", only=("id",))
+    #game = fields.Nested("GameSchema", only=("id",))
+    game_id = fields.Int()
     range_min = fields.Int()
     range_max = fields.Int()
+    number = fields.Int()
     guess = fields.Int()
     status = fields.Str(validate=validate.OneOf([status for status in GuessStatus.__members__.values()]))  #["correct", "low", "high", "invalid"]
 
@@ -17,8 +18,11 @@ class GameSchema(Schema):
     range_max = fields.Int(required=True)
     secret_number = fields.Int(dump_only = True)
     is_over = fields.Boolean(dump_only = True)
-    user = fields.Nested("UserSchema", only=("id",), dump_only = True)
-    rounds = fields.Nested(RoundSchema, many=True, dump_only = True)
+    #user = fields.Nested("UserSchema", only=("id",), dump_only = True)
+    user_id = fields.Int(dump_only = True)
+    #rounds = fields.Nested(RoundSchema, many=True, dump_only = True)
+    number_of_rounds = fields.Function(lambda obj: len(obj.rounds), dump_only = True)
+    
     
     @validates_schema
     def validate_range(self, data, **kwargs):
@@ -27,7 +31,7 @@ class GameSchema(Schema):
         if range_min > range_max:
             raise ValidationError(f"error: range_min {range_min} is greater than range_max {range_max}")    
 
-class GameUpdateSchema(Schema):
+class RoundUpdateSchema(Schema):
     guess = fields.Int(required=True)
 
 class UserSchema(Schema):
