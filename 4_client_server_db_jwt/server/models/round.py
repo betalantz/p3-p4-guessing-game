@@ -25,7 +25,6 @@ class Round(db.Model):
             self.guess = guess
             if guess == self.game.secret_number:
                 self.status = GuessStatus.CORRECT
-                self.game.is_over = True
             else:
                 if guess < self.range_min or guess > self.range_max:
                     self.status = GuessStatus.INVALID

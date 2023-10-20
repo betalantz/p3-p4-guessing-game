@@ -10,7 +10,6 @@ from db import db
 from models import TokenBlocklist, User
 from default_config import DefaultConfig
 from resources.game import blp as GameBlueprint
-from resources.round import blp as RoundBlueprint
 from resources.user import blp as UserBlueprint
 
 app = Flask(__name__)
@@ -65,7 +64,6 @@ api = Api(app)
 
 # Register blueprints
 api.register_blueprint(GameBlueprint)
-api.register_blueprint(RoundBlueprint)
 api.register_blueprint(UserBlueprint)
 
 # Add authorize button to OpenAPI document
