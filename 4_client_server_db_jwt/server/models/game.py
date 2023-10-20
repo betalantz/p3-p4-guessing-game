@@ -1,6 +1,6 @@
 from random import randint
 from db import db
-from models import  Round, GuessStatus, DifficultyLevel
+from models import Round, GuessStatus, DifficultyLevel
 
 
 def create_secret_number(context):
@@ -26,30 +26,26 @@ class Game(db.Model):
     __table_args__ = (
         db.CheckConstraint("range_min <= range_max", name="min_max_range"),
     )
-            
-    def play_round(self, guess):
-        """Update the current round based on the guess"""
-        if self.is_over: 
-            raise Exception("Game is over.")
-        current_round = max(self.rounds, key=lambda round: round.id)
-        current_round.guess = guess
-        if guess == self.secret_number:
-            current_round.status = GuessStatus.CORRECT
-            self.is_over = True
+    
+    def current_round(self):
+        return max(self.rounds, key=lambda round: round.number) if self.rounds else None
+    
+    def new_round(self):
+        if self.is_over:
+            raise RuntimeError(f"Error adding new round. Game {self.id} is over.")
+        if self.rounds:
+            #create next round based on current round
+            round = self.current_round()
+            if round.status is None: 
+                raise RuntimeError(f"Current round {round.id} status must be set prior to creating a new round.")
+            next_min = round.range_min
+            next_max = round.range_max
+            if self.difficulty == DifficultyLevel.EASY:
+                if round.status == GuessStatus.HIGH:
+                    next_max = round.guess - 1  #adjust range_max for next round   
+                elif round.status == GuessStatus.LOW:
+                    next_min= round.guess + 1  #adjust range_min for next round  
+            return Round(game = self, range_min = next_min, range_max = next_max, number = round.number + 1)
         else:
-            #assign status to current round and create the next round of play
-            next_min = current_round.range_min
-            next_max = current_round.range_max
-            if guess < current_round.range_min or guess > current_round.range_max:
-                current_round.status = GuessStatus.INVALID
-            elif guess > self.secret_number:
-                current_round.status = GuessStatus.HIGH
-                if self.difficulty == DifficultyLevel.EASY:
-                    next_max = guess - 1  #adjust range_max for next round   
-            else:
-                current_round.status = GuessStatus.LOW
-                if self.difficulty == DifficultyLevel.EASY:
-                    next_min= guess + 1  #adjust range_min for next round      
-
-            return Round(game = self, range_min = next_min, range_max = next_max) #create next round
-        
+            #create 1st round
+            return Round(game = self, range_min = self.range_min, range_max = self.range_max, number =  1)            

@@ -18,13 +18,8 @@ def seed():
     game3 = Game(user=user2, difficulty="easy", range_min=1, range_max=50)
     db.session.add_all([game1, game2, game3])
     db.session.commit()
-    db.session.add(
-        Round(game=game1, range_min=game1.range_min, range_max=game1.range_max)
-    )
-    db.session.add(Round(game=game1, range_min=5, range_max=8))
-    db.session.add(
-        Round(game=game2, range_min=game2.range_min, range_max=game2.range_max)
-    )
+    db.session.add(game1.new_round())
+    db.session.add(game2.new_round())
     db.session.commit()
 
 
