@@ -29,9 +29,19 @@ export const patchGamesFetch = async (formData, round) => {
     },
     body: JSON.stringify(formData),
   };
-  return fetch(`/games/${round.game.id}`, config);
+  return fetch(`/games/${round.game_id}/rounds`, config);
 };
 
 export const roundsByGameIdFetch = async (id) => {
   return fetch(`/games/${id}/rounds`);
 };
+
+export const newRoundByGameIdFetch = async (id) => {
+  const config = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+  return fetch(`/games/${id}/rounds`, config);
+}

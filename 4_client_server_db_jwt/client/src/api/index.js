@@ -10,6 +10,8 @@ import {
   patchGamesFetch,
   gamesByIdFetch,
   deleteGamesByIdFetch,
+  roundsByGameIdFetch,
+  newRoundByGameIdFetch
 } from "./game";
 export {
   registerFetch,
@@ -21,4 +23,6 @@ export {
   patchGamesFetch,
   gamesByIdFetch,
   deleteGamesByIdFetch,
+  roundsByGameIdFetch,
+  newRoundByGameIdFetch
 };
