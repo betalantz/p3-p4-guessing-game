@@ -47,9 +47,10 @@ function GameDetail() {
     fetchGame().catch(console.error);
     fetchRounds().catch(console.error);
   }, [id, fetchGame, fetchRounds]);
-
+  
   function handleUpdateGame() {
-    fetchGame();
+    fetchGame().catch(console.error);
+    fetchRounds().catch(console.error);
   }
 
   if (status === "pending") return <h2>Loading...</h2>;

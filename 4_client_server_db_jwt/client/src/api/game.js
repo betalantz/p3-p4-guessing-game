@@ -1,3 +1,5 @@
+// TODO: Handle expired tokens with redirects to login page
+
 export const gamesFetch = async () => {
   return fetch("/games");
 };
