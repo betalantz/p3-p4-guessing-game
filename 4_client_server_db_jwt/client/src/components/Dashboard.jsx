@@ -3,12 +3,13 @@ import React, { Suspense, useState, useEffect } from "react";
 import GameCard from "./GameCard";
 import GridLoader from "react-spinners/GridLoader";
 import { gamesFetch, deleteGamesByIdFetch } from "../api";
+import { useGames } from "../providers/gamesProvider";
 import StatusDetail from "./StatusDetail";
 
 function Dashboard() {
-  const [games, setGames] = useState([]);
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState("");
+  const { games, setGames } = useGames();
 
   useEffect(() => {
     const fetchGames = async () => {
