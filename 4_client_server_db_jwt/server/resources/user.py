@@ -10,6 +10,7 @@ from flask_jwt_extended import (
     get_jwt,
     jwt_required,
     set_access_cookies,
+    set_refresh_cookies,
     unset_jwt_cookies,
 )
 from flask_smorest import Blueprint, abort
@@ -59,14 +60,15 @@ class UsersLogin(MethodView):
             )
 
             # Set the JWT cookies in the response
-            set_access_cookies(resp, access_token, refresh_token)
+            set_access_cookies(resp, access_token)
+            set_refresh_cookies(resp, refresh_token)
             return resp, 200
 
         abort(401, message="Invalid credentials.")
 
 
 # update /authenticate to become our /refresh route
-@blp.route("/authenticate")
+@blp.route("/refresh")
 class UserAuthenticated(MethodView):
     # be default, jwt_required() checks for type="access" token
     @jwt_required(refresh=True)

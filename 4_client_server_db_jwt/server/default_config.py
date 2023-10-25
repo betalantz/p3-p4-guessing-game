@@ -19,7 +19,8 @@ class DefaultConfig:
         "postgresql://postgres:postgres@localhost:5432/flatiron_labs"
     )
     JWT_SECRET_KEY = str(secrets.SystemRandom().getrandbits(128))
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=1)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=20)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
     # JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
     JWT_TOKEN_LOCATION = ["cookies"]
     # Storing the tokens in cookies protects agains XSS attacks but is vulnerable to CSRF attacks.
