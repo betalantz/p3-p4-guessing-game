@@ -8,7 +8,7 @@ import GameDetail from "../components/GameDetail";
 import GameForm from "../components/GameForm";
 
 const Routes = () => {
-  const { token } = useAuth();
+  const { token, isTokenExpired } = useAuth();
 
   const routesForAuthenticated = [
     {
@@ -43,7 +43,7 @@ const Routes = () => {
   ];
 
   const router = createBrowserRouter([
-    ...(!token ? routesForUnauthenticated : []),
+    ...((!token || isTokenExpired()) ? routesForUnauthenticated : []),
     ...routesForAuthenticated,
   ]);
 

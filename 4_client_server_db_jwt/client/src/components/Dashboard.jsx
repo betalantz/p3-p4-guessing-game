@@ -5,6 +5,7 @@ import GridLoader from "react-spinners/GridLoader";
 import { gamesFetch, deleteGamesByIdFetch } from "../api";
 import { useGames } from "../providers/gamesProvider";
 import { useAuth } from "../providers/authProvider";
+import { useNavigate } from "react-router-dom";
 import StatusDetail from "./StatusDetail";
 
 function Dashboard() {
@@ -13,6 +14,7 @@ function Dashboard() {
   const { games, setGames } = useGames();
   const { isTokenExpired } = useAuth();
   console.log("🚀 ~ file: Dashboard.jsx:15 ~ Dashboard ~ isTokenExpired:", isTokenExpired())
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -31,8 +33,11 @@ function Dashboard() {
         });
       }
     };
-
-    fetchGames();
+    if (!isTokenExpired()) {
+      fetchGames();
+    } else {
+      navigate("/login");
+    }
   }, []);
 
   async function deleteGame(id) {
