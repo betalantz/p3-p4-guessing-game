@@ -2,7 +2,7 @@ import {
   registerFetch,
   loginFetch,
   logoutFetch,
-  authenticateFetch,
+  refreshFetch,
 } from "./authentication";
 import {
   gamesFetch,
@@ -17,7 +17,7 @@ export {
   registerFetch,
   loginFetch,
   logoutFetch,
-  authenticateFetch,
+  refreshFetch,
   gamesFetch,
   postGamesFetch,
   patchGamesFetch,

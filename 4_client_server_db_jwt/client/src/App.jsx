@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { useAuth } from "./providers/authProvider";
-import { authenticateFetch } from "./api";
+import { refreshFetch } from "./api";
 import Routes from "./routes/Routes";
 import GridLoader from "react-spinners/GridLoader";
 
@@ -10,8 +10,8 @@ function App() {
 
   useEffect(() => {
     setIsLoading(true);
-    const fetchAuth = async () => {
-      const res = await authenticateFetch();
+    const fetchRefresh = async () => {
+      const res = await refreshFetch();
       if (res.ok) {
         const tokenJSON = await res.json();
         setToken(tokenJSON);
@@ -21,7 +21,7 @@ function App() {
       setIsLoading(false);
     };
 
-    fetchAuth();
+    fetchRefresh();
   }, []);
 
   if (isLoading) return <GridLoader />;

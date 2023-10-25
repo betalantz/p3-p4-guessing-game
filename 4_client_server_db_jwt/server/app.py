@@ -8,8 +8,8 @@ from flask import Flask, redirect
 from flask_jwt_extended import (
     JWTManager,
     create_access_token,
+    current_user,
     get_jwt,
-    get_jwt_identity,
     set_access_cookies,
 )
 from flask_migrate import Migrate
@@ -102,7 +102,7 @@ def refresh_expiring_jwts(response):
         now = datetime.utcnow()
         target_timestamp = datetime.timestamp(now + timedelta(minutes=15))
         if target_timestamp > exp_timestamp:
-            access_token = create_access_token(identity=get_jwt_identity(), fresh=False)
+            access_token = create_access_token(identity=current_user)
             set_access_cookies(response, access_token)
         return response
     except (RuntimeError, KeyError):
