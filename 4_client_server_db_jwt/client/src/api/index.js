@@ -2,7 +2,7 @@ import {
   registerFetch,
   loginFetch,
   logoutFetch,
-  authenticateFetch,
+  refreshFetch,
 } from "./authentication";
 import {
   gamesFetch,
@@ -11,18 +11,18 @@ import {
   gamesByIdFetch,
   deleteGamesByIdFetch,
   roundsByGameIdFetch,
-  newRoundByGameIdFetch
+  newRoundByGameIdFetch,
 } from "./game";
 export {
   registerFetch,
   loginFetch,
   logoutFetch,
-  authenticateFetch,
+  refreshFetch,
   gamesFetch,
   postGamesFetch,
   patchGamesFetch,
   gamesByIdFetch,
   deleteGamesByIdFetch,
   roundsByGameIdFetch,
-  newRoundByGameIdFetch
+  newRoundByGameIdFetch,
 };

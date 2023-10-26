@@ -1,5 +1,3 @@
-// TODO: Handle expired tokens with redirects to login page
-
 export const gamesFetch = async () => {
   return fetch("/games");
 };
@@ -44,6 +42,6 @@ export const newRoundByGameIdFetch = async (id) => {
     headers: {
       "Content-Type": "application/json",
     },
-  }
+  };
   return fetch(`/games/${id}/rounds`, config);
-}
+};

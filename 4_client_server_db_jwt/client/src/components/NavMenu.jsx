@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu, MenuItem, IconButton, Link } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/authProvider";
 import { logoutFetch } from "../api";
 
@@ -14,12 +14,16 @@ export default function NavMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const navigate = useNavigate();
   const { setToken } = useAuth();
 
   const handleLogout = async () => {
     handleClose();
     const res = await logoutFetch();
-    if (res.ok) setToken(null);
+    if (res.ok) {
+      setToken(null);
+      navigate("/login");
+    }
   };
 
   return (

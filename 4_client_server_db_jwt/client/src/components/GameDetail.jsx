@@ -2,7 +2,12 @@ import React, { useState, useEffect, useCallback, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import GridLoader from "react-spinners/GridLoader";
 import RoundCard from "./RoundCard";
-import { gamesByIdFetch, roundsByGameIdFetch, newRoundByGameIdFetch } from "../api";
+import {
+  gamesByIdFetch,
+  roundsByGameIdFetch,
+  newRoundByGameIdFetch,
+} from "../api";
+import { useAuth } from "../providers/authProvider";
 
 function GameDetail() {
   const [game, setGame] = useState({ secret_number: 0 });
@@ -10,6 +15,7 @@ function GameDetail() {
   const [error, setError] = useState(null);
   const [status, setStatus] = useState("pending");
   const { id } = useParams();
+  const { isTokenExpired } = useAuth();
 
   const fetchGame = useCallback(async () => {
     const res = await gamesByIdFetch(id);
@@ -44,10 +50,12 @@ function GameDetail() {
   }, [id]);
 
   useEffect(() => {
-    fetchGame().catch(console.error);
-    fetchRounds().catch(console.error);
-  }, [id, fetchGame, fetchRounds]);
-  
+    if (!isTokenExpired()) {
+      fetchGame().catch(console.error);
+      fetchRounds().catch(console.error);
+    }
+  }, [id, fetchGame, fetchRounds, isTokenExpired]);
+
   function handleUpdateGame() {
     fetchGame().catch(console.error);
     fetchRounds().catch(console.error);
@@ -62,14 +70,16 @@ function GameDetail() {
         <h2>Game {game.id}</h2>
         <div className="roundList">
           <ul>
-            {rounds.reverse().map((round, index) => (
-              <RoundCard
-                key={index}
-                round={round}
-                game={game}
-                onGuessRequest={handleUpdateGame}
-              />
-            ))}
+            {rounds
+              .sort((a, b) => b.number - a.number)
+              .map((round, index) => (
+                <RoundCard
+                  key={index}
+                  round={round}
+                  game={game}
+                  onGuessRequest={handleUpdateGame}
+                />
+              ))}
           </ul>
         </div>
       </div>

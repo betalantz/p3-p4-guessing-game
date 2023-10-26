@@ -1,5 +1,3 @@
-// TODO: Handle expired tokens with redirects to login page
-
 export const registerFetch = async (formData) => {
   const config = {
     method: "POST",
@@ -32,6 +30,6 @@ export const logoutFetch = async () => {
   return fetch("/logout", config);
 };
 
-export const authenticateFetch = async () => {
-  return fetch("/authenticate");
+export const refreshFetch = async () => {
+  return fetch("/refresh");
 };
