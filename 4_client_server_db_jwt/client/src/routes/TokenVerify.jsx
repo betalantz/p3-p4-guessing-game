@@ -16,7 +16,7 @@ function TokenVerify() {
   // If the token is expired, set a message and log the user out after 10 seconds.
   // Extensible to show a modal to the user to ask if they want to stay logged in, display countdown, etc.
   useEffect(() => {
-    if (isTokenExpired()) {
+    if (isTokenExpired() && location.pathname !== "/login") {
       setMessage({
         message: "You will be logged out in 10 seconds due to inactivity.",
       });

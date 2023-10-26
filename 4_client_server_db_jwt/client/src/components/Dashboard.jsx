@@ -33,7 +33,7 @@ function Dashboard() {
     if (!isTokenExpired()) {
       fetchGames();
     }
-  }, [isTokenExpired, setGames]);
+  }, [isTokenExpired]);
 
   async function deleteGame(id) {
     const res = await deleteGamesByIdFetch(id);

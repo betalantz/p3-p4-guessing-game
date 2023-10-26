@@ -70,14 +70,16 @@ function GameDetail() {
         <h2>Game {game.id}</h2>
         <div className="roundList">
           <ul>
-            {rounds.reverse().map((round, index) => (
-              <RoundCard
-                key={index}
-                round={round}
-                game={game}
-                onGuessRequest={handleUpdateGame}
-              />
-            ))}
+            {rounds
+              .sort((a, b) => b.number - a.number)
+              .map((round, index) => (
+                <RoundCard
+                  key={index}
+                  round={round}
+                  game={game}
+                  onGuessRequest={handleUpdateGame}
+                />
+              ))}
           </ul>
         </div>
       </div>
