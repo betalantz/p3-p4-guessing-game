@@ -6,31 +6,33 @@ import Authentication from "../components/Authentication";
 import Dashboard from "../components/Dashboard";
 import GameDetail from "../components/GameDetail";
 import GameForm from "../components/GameForm";
+import TokenVerify from "./TokenVerify";
 
 const Routes = () => {
   const { token, isTokenExpired } = useAuth();
 
+  
   const routesForAuthenticated = [
     {
       path: "/",
       element: <ProtectedRoute />,
       children: [
         {
-          path: "/dashboard",
+          path: "dashboard",
           element: <Dashboard />,
         },
         {
-          path: "/games/:id",
+          path: "games/:id",
           element: <GameDetail />,
         },
         {
-          path: "/games/new",
+          path: "games/new",
           element: <GameForm />,
         },
       ],
     },
   ];
-
+  
   const routesForUnauthenticated = [
     {
       path: "/",
@@ -41,10 +43,20 @@ const Routes = () => {
       element: <Authentication />,
     },
   ];
+  
+  const publicRoutes = [
+    {
+      path: "/",
+      element: <TokenVerify />,
+      children: [
+        ...((!token || isTokenExpired()) ? routesForUnauthenticated : []),
+        ...routesForAuthenticated,
+      ]
+    }
+  ];
 
   const router = createBrowserRouter([
-    ...((!token || isTokenExpired()) ? routesForUnauthenticated : []),
-    ...routesForAuthenticated,
+    ...publicRoutes,
   ]);
 
   return <RouterProvider router={router} />;
