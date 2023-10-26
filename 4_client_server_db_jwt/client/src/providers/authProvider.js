@@ -10,14 +10,15 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [token, setToken_] = useState(null);
+  const [loading, setLoading_] = useState(false);
   const isTokenExpired = useCallback(() => {
     if (!token) {
-      return true;
+      return null;
     }
     const payload = token.access_token.split(".")[1];
     const { exp } = JSON.parse(atob(payload));
     if (!exp) {
-      return true;
+      return null;
     }
 
     return Date.now() >= exp * 1000;
@@ -25,7 +26,8 @@ const AuthProvider = ({ children }) => {
 
   const contextValue = useMemo(() => {
     const setToken = (newToken) => setToken_(newToken);
-    return { token, setToken, isTokenExpired };
+    const setLoading = (newLoading) => setLoading_(newLoading);
+    return { token, setToken, isTokenExpired, loading, setLoading };
   }, [token, isTokenExpired]);
 
   return (

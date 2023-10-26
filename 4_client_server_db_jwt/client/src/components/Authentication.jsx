@@ -9,7 +9,7 @@ import { registerFetch, loginFetch } from "../api";
 import StatusDetail from "./StatusDetail";
 
 export default function Authentication() {
-  const { setToken } = useAuth();
+  const { setToken, setLoading } = useAuth();
   const navigate = useNavigate();
   const [isSignup, setIsSignup] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -24,6 +24,7 @@ export default function Authentication() {
   });
 
   const handleSubmit = async (values, setSubmitting) => {
+    setLoading(true);
     setMessage("");
     setIsError(false);
     if (isSignup) {
@@ -40,7 +41,8 @@ export default function Authentication() {
         setIsError(true);
         setMessage(resJSON);
       } else {
-        setToken(resJSON);
+        await setToken(resJSON);
+        setLoading(false)
         navigate("/dashboard");
       }
     }

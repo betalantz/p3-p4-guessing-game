@@ -43,17 +43,35 @@ const Routes = () => {
     },
   ];
 
+  const allRoutes = [
+    {
+      path: "dashboard",
+      element: <Dashboard />,
+    },
+    {
+      path: "games/:id",
+      element: <GameDetail />,
+    },
+    {
+      path: "games/new",
+      element: <GameForm />,
+    },
+    {
+      path: "login",
+      element: <Authentication />,
+    },
+  ]
+
   const publicRoutes = [
     {
       path: "/",
       element: <TokenVerify />,
       children: [
-        ...(!token || isTokenExpired() ? routesForUnauthenticated : []),
-        ...routesForAuthenticated,
+        ...allRoutes,
       ],
     },
   ];
-
+  
   const router = createBrowserRouter([...publicRoutes]);
 
   return <RouterProvider router={router} />;
