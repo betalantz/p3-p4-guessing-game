@@ -75,18 +75,8 @@ class UserAuthenticated(MethodView):
     @blp.doc(authorize=True)
     def get(self):
         """Check if user is authenticated."""
-        # looks like much of below is handled by token_in_blocklist_loader
-        # so just sending new access token back to client for now
-        # jti = get_jwt()["jti"]
-        # blocked = db.session.scalars(
-        #     select(TokenBlocklist).where(TokenBlocklist.jti == jti)
-        # ).first()
-        # if blocked:
-        #     abort(401, message="Token has been revoked.")
-
-        # user_id = get_jwt_identity()
-        # access_token = create_access_token(identity=user_id)
-        access_token = create_access_token(identity=current_user)
+        # although a new access token is created, we know it has been refreshed because the fresh parameter is set to False
+        access_token = create_access_token(identity=current_user, fresh=False)
         resp = jsonify({"access_token": access_token})
         set_access_cookies(resp, access_token)
         return resp, 200
@@ -94,7 +84,8 @@ class UserAuthenticated(MethodView):
 
 @blp.route("/logout")
 class UsersLogout(MethodView):
-    @jwt_required()
+    # refresh=True means only a refresh token is required; expired access tokens can pass
+    @jwt_required(refresh=True)
     @blp.doc(authorize=True)
     def post(self):
         """Revoke access token for authenticated user."""

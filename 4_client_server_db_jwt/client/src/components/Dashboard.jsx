@@ -4,13 +4,15 @@ import GameCard from "./GameCard";
 import GridLoader from "react-spinners/GridLoader";
 import { gamesFetch, deleteGamesByIdFetch } from "../api";
 import { useGames } from "../providers/gamesProvider";
+import { useAuth } from "../providers/authProvider";
 import StatusDetail from "./StatusDetail";
 
 function Dashboard() {
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState("");
   const { games, setGames } = useGames();
-  
+  const { isTokenExpired } = useAuth();
+
   useEffect(() => {
     const fetchGames = async () => {
       setMessage("");
@@ -28,8 +30,10 @@ function Dashboard() {
         });
       }
     };
-    fetchGames();
-  }, []);
+    if (!isTokenExpired()) {
+      fetchGames();
+    }
+  }, [isTokenExpired, setGames]);
 
   async function deleteGame(id) {
     const res = await deleteGamesByIdFetch(id);
@@ -46,10 +50,10 @@ function Dashboard() {
   }
 
   let gameCards = games
-  .sort((a, b) => a.number - b.number) // sort by number
-  .map((game) => (
-    <GameCard key={game.id} game={game} onDelete={deleteGame} />
-  ));
+    .sort((a, b) => a.number - b.number) // sort by number
+    .map((game) => (
+      <GameCard key={game.id} game={game} onDelete={deleteGame} />
+    ));
 
   return (
     <>

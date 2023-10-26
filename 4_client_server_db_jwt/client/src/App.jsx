@@ -2,11 +2,10 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useAuth } from "./providers/authProvider";
 import { refreshFetch } from "./api";
 import Routes from "./routes/Routes";
-import TokenVerify from "./routes/TokenVerify";
 import GridLoader from "react-spinners/GridLoader";
 
 function App() {
-  const { token, setToken } = useAuth();
+  const { setToken } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

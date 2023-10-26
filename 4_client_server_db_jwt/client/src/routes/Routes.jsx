@@ -11,7 +11,6 @@ import TokenVerify from "./TokenVerify";
 const Routes = () => {
   const { token, isTokenExpired } = useAuth();
 
-  
   const routesForAuthenticated = [
     {
       path: "/",
@@ -32,7 +31,7 @@ const Routes = () => {
       ],
     },
   ];
-  
+
   const routesForUnauthenticated = [
     {
       path: "/",
@@ -43,21 +42,19 @@ const Routes = () => {
       element: <Authentication />,
     },
   ];
-  
+
   const publicRoutes = [
     {
       path: "/",
       element: <TokenVerify />,
       children: [
-        ...((!token || isTokenExpired()) ? routesForUnauthenticated : []),
+        ...(!token || isTokenExpired() ? routesForUnauthenticated : []),
         ...routesForAuthenticated,
-      ]
-    }
+      ],
+    },
   ];
 
-  const router = createBrowserRouter([
-    ...publicRoutes,
-  ]);
+  const router = createBrowserRouter([...publicRoutes]);
 
   return <RouterProvider router={router} />;
 };

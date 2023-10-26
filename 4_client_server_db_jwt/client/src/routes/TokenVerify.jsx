@@ -1,37 +1,49 @@
-import React, { useEffect, useState } from 'react'
-import {useLocation, useNavigation, Outlet} from 'react-router-dom'
-import {useAuth} from '../providers/authProvider'
-import StatusDetail from '../components/StatusDetail'
-
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, Outlet } from "react-router-dom";
+import { useAuth } from "../providers/authProvider";
+import StatusDetail from "../components/StatusDetail";
+import { logoutFetch } from "../api";
 
 function TokenVerify() {
-  const [ message, setMessage ] = useState('')
- 
-  const { isTokenExpired } = useAuth()
+  const [message, setMessage] = useState("");
 
-  const location = useLocation()
+  const { isTokenExpired } = useAuth();
 
-  const navigate = useNavigation()
+  const location = useLocation();
 
+  const navigate = useNavigate();
+
+  // If the token is expired, set a message and log the user out after 10 seconds.
+  // Extensible to show a modal to the user to ask if they want to stay logged in, display countdown, etc.
   useEffect(() => {
-    console.log("🚀 ~ file: TokenVerify.jsx:15 ~ useEffect ~ isTokenExpired():", isTokenExpired())
     if (isTokenExpired()) {
-     setMessage('You will be logged out in 10 seconds due to inactivity.')
+      setMessage({
+        message: "You will be logged out in 10 seconds due to inactivity.",
+      });
+      setTimeout(async () => {
+        const res = await logoutFetch();
+        if (res.ok) {
+          setMessage("");
+          navigate("/login");
+        } else {
+          setMessage("Logout failed.");
+        }
+      }, 10000);
     }
-  }, [location, navigate, isTokenExpired])
+  }, [location, navigate, isTokenExpired]);
 
   return (
     <>
-      {message && 
+      {message && (
         <StatusDetail
           message={message}
           isError={true}
-          onCloseHandler={() => setMessage('')}
+          onCloseHandler={() => setMessage("")}
         />
-      }
+      )}
       <Outlet />
     </>
-  )
+  );
 }
 
-export default TokenVerify
+export default TokenVerify;
