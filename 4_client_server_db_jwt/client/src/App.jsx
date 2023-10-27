@@ -10,9 +10,12 @@ function App() {
   const [isLoading, setIsLoading] = useState(true); // use AuthProvider's loading state instead?
   
 // checks specifically to see if the token had become corrupted
-function checkResponse(res) {
-  if (res.statusText === "Signature verification failed") {
-    goToLogin();
+  async function checkResponse(res) {
+  if (res.status === 422) {
+    const error = await res.json();
+    if (error.msg === "Signature verification failed") {
+      goToLogin();
+    }
   }
   return res;
 }

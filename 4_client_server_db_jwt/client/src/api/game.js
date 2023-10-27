@@ -7,7 +7,7 @@ export const gamesFetch = async () => {
 // };
 
 export const deleteGamesByIdFetch = async (id) => {
-  return fetch(`/games/${id}`);
+  return fetch(`/games/${id}`, { method: "DELETE" });
 };
 
 export const postGamesFetch = async (formData) => {
