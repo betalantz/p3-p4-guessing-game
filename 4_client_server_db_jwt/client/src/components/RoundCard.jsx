@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Stack from "@mui/material/Stack";
 import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
-import { patchGamesFetch, newRoundByGameIdFetch } from "../api";
+import { patchGamesFetch } from "../api";
 
 function RoundCard({ round, onGuessRequest }) {
   const [isCurrentRound, setIsCurrentRound] = useState(false);
@@ -57,7 +57,6 @@ function RoundCard({ round, onGuessRequest }) {
 
     if (res.ok) {
       const updGame = await res.json();
-      // if (updGame.status !== "correct") await newRoundByGameIdFetch(updGame.id);
       onGuessRequest(updGame);
       setGuess(round.range_min);
       setErrors([]);

@@ -75,6 +75,7 @@ class Game(db.Model):
             round.update(guess)
             if round.status == GuessStatus.CORRECT:
                 self.is_over = True
+
         else:
             raise RuntimeError(
                 f"Error updating game {self.id}. Game does not contain a round to update."

@@ -117,8 +117,9 @@ class GameRounds(MethodView):
         """Update current round by game id for authorized user."""
         try:
             game.update(fields["guess"])  # update current round's status and guess
-            round = game.new_round()
-            db.session.add(round)
+            if not game.is_over:
+                round = game.new_round()
+                db.session.add(round)
             db.session.commit()
             return game
         except SQLAlchemyError as err:
