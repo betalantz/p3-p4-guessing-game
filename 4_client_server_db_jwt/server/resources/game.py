@@ -59,13 +59,25 @@ class Games(MethodView):
 
 @blp.route("/games/<int:game_id>")
 class GamesById(MethodView):
-    # @jwt_required()
-    # @blp.doc(authorize=True)
-    # @blp.response(200, GameSchema)
-    # @game_authorized()
-    # def get(self, game):
-    #     """Get game by id for authorized user."""
-    #     return game
+    @jwt_required()
+    @blp.doc(authorize=True)
+    @blp.arguments(GameUpdateSchema)
+    @blp.response(200, GameSchema)
+    @game_authorized()
+    def patch(self, fields, game):
+        """Update current round by game id for authorized user."""
+        try:
+            game.update(fields["guess"])  # update current round's status and guess
+            if not game.is_over:
+                round = game.new_round()
+                db.session.add(round)
+            db.session.commit()
+            return game
+        except SQLAlchemyError as err:
+            db.session.rollback()
+            abort(400, round=err.__class__.__name__, errors=[str(x) for x in err.args])
+        except RuntimeError as err:
+            abort(409, message=str(err))
 
     @jwt_required()
     @blp.doc(authorize=True)
@@ -90,23 +102,3 @@ class GameRounds(MethodView):
     def get(self, game):
         """List rounds by game id for authorized user."""
         return game.rounds
-
-    @jwt_required()
-    @blp.doc(authorize=True)
-    @blp.arguments(GameUpdateSchema)
-    @blp.response(200, GameSchema)
-    @game_authorized()
-    def patch(self, fields, game):
-        """Update current round by game id for authorized user."""
-        try:
-            game.update(fields["guess"])  # update current round's status and guess
-            if not game.is_over:
-                round = game.new_round()
-                db.session.add(round)
-            db.session.commit()
-            return game
-        except SQLAlchemyError as err:
-            db.session.rollback()
-            abort(400, round=err.__class__.__name__, errors=[str(x) for x in err.args])
-        except RuntimeError as err:
-            abort(409, message=str(err))

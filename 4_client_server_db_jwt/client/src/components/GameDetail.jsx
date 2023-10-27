@@ -2,36 +2,15 @@ import React, { useState, useEffect, useCallback, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import GridLoader from "react-spinners/GridLoader";
 import RoundCard from "./RoundCard";
-import {
-  gamesByIdFetch,
-  roundsByGameIdFetch,
-  newRoundByGameIdFetch,
-} from "../api";
+import { roundsByGameIdFetch } from "../api";
 import { useAuth } from "../providers/authProvider";
 
 function GameDetail() {
-  const [game, setGame] = useState({ secret_number: 0 });
   const [rounds, setRounds] = useState([]);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState("pending");
   const { id } = useParams();
   const { isTokenExpired } = useAuth();
-
-  // const fetchGame = useCallback(async () => {
-  //   const res = await gamesByIdFetch(id);
-
-  //   if (res.ok) {
-  //     const gameJSON = await res.json();
-  //     setGame(gameJSON);
-  //     setError(null);
-  //     setStatus("resolved");
-  //   } else {
-  //     const err = await res.json();
-  //     setGame(null);
-  //     setError(err);
-  //     setStatus("rejected");
-  //   }
-  // }, [id]);
 
   const fetchRounds = useCallback(async () => {
     const res = await roundsByGameIdFetch(id);
@@ -51,13 +30,11 @@ function GameDetail() {
 
   useEffect(() => {
     if (!isTokenExpired()) {
-      // fetchGame().catch(console.error);
       fetchRounds().catch(console.error);
     }
   }, [id, fetchRounds, isTokenExpired]);
 
   function handleUpdateGame() {
-    // fetchGame().catch(console.error);
     fetchRounds().catch(console.error);
   }
 
@@ -76,7 +53,6 @@ function GameDetail() {
                 <RoundCard
                   key={index}
                   round={round}
-                  game={game}
                   onGuessRequest={handleUpdateGame}
                 />
               ))}

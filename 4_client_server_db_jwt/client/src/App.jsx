@@ -10,6 +10,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true); // use AuthProvider's loading state instead?
   
 // checks specifically to see if the token had become corrupted
+// TODO: apply to requests other than refresh
   async function checkResponse(res) {
   if (res.status === 422) {
     const error = await res.json();
