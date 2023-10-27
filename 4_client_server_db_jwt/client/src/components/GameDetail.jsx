@@ -62,7 +62,7 @@ function GameDetail() {
   }
 
   if (status === "pending") return <h2>Loading...</h2>;
-  if (status === "rejected") return <h2>Error: {error}</h2>;
+  if (status === "rejected") return <h2 color="red">Error: {error.message}</h2>;
 
   return (
     <Suspense fallback={<GridLoader />}>
