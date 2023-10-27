@@ -2,9 +2,9 @@ export const gamesFetch = async () => {
   return fetch("/games");
 };
 
-export const gamesByIdFetch = async (id) => {
-  return fetch(`/games/${id}`);
-};
+// export const gamesByIdFetch = async (id) => {
+//   return fetch(`/games/${id}`);
+// };
 
 export const deleteGamesByIdFetch = async (id) => {
   return fetch(`/games/${id}`);

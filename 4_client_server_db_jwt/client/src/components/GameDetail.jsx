@@ -17,21 +17,21 @@ function GameDetail() {
   const { id } = useParams();
   const { isTokenExpired } = useAuth();
 
-  const fetchGame = useCallback(async () => {
-    const res = await gamesByIdFetch(id);
+  // const fetchGame = useCallback(async () => {
+  //   const res = await gamesByIdFetch(id);
 
-    if (res.ok) {
-      const gameJSON = await res.json();
-      setGame(gameJSON);
-      setError(null);
-      setStatus("resolved");
-    } else {
-      const err = await res.json();
-      setGame(null);
-      setError(err);
-      setStatus("rejected");
-    }
-  }, [id]);
+  //   if (res.ok) {
+  //     const gameJSON = await res.json();
+  //     setGame(gameJSON);
+  //     setError(null);
+  //     setStatus("resolved");
+  //   } else {
+  //     const err = await res.json();
+  //     setGame(null);
+  //     setError(err);
+  //     setStatus("rejected");
+  //   }
+  // }, [id]);
 
   const fetchRounds = useCallback(async () => {
     const res = await roundsByGameIdFetch(id);
@@ -51,13 +51,13 @@ function GameDetail() {
 
   useEffect(() => {
     if (!isTokenExpired()) {
-      fetchGame().catch(console.error);
+      // fetchGame().catch(console.error);
       fetchRounds().catch(console.error);
     }
-  }, [id, fetchGame, fetchRounds, isTokenExpired]);
+  }, [id, fetchRounds, isTokenExpired]);
 
   function handleUpdateGame() {
-    fetchGame().catch(console.error);
+    // fetchGame().catch(console.error);
     fetchRounds().catch(console.error);
   }
 
@@ -67,7 +67,7 @@ function GameDetail() {
   return (
     <Suspense fallback={<GridLoader />}>
       <div>
-        <h2>Game {game.id}</h2>
+        <h2>Game {id}</h2>
         <div className="roundList">
           <ul>
             {rounds

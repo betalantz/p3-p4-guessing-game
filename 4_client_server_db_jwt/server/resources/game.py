@@ -59,13 +59,13 @@ class Games(MethodView):
 
 @blp.route("/games/<int:game_id>")
 class GamesById(MethodView):
-    @jwt_required()
-    @blp.doc(authorize=True)
-    @blp.response(200, GameSchema)
-    @game_authorized()
-    def get(self, game):
-        """Get game by id for authorized user."""
-        return game
+    # @jwt_required()
+    # @blp.doc(authorize=True)
+    # @blp.response(200, GameSchema)
+    # @game_authorized()
+    # def get(self, game):
+    #     """Get game by id for authorized user."""
+    #     return game
 
     @jwt_required()
     @blp.doc(authorize=True)
