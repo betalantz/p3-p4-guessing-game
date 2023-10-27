@@ -59,7 +59,7 @@ function Dashboard() {
     <>
       <Suspense fallback={<GridLoader />}>
         <h1>Your Games</h1>
-        <div className="gameList">{gameCards}</div>
+        <div className="gameList">{gameCards.length ? gameCards : "No games to show."}</div>
         {message ? (
           <StatusDetail
             message={message}

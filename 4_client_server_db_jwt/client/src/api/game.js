@@ -2,9 +2,9 @@ export const gamesFetch = async () => {
   return fetch("/games");
 };
 
-export const gamesByIdFetch = async (id) => {
-  return fetch(`/games/${id}`);
-};
+// export const gamesByIdFetch = async (id) => {
+//   return fetch(`/games/${id}`);
+// };
 
 export const deleteGamesByIdFetch = async (id) => {
   return fetch(`/games/${id}`);
@@ -36,12 +36,3 @@ export const roundsByGameIdFetch = async (id) => {
   return fetch(`/games/${id}/rounds`);
 };
 
-export const newRoundByGameIdFetch = async (id) => {
-  const config = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  return fetch(`/games/${id}/rounds`, config);
-};

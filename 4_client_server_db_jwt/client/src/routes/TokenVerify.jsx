@@ -4,6 +4,7 @@ import { useAuth } from "../providers/authProvider";
 import StatusDetail from "../components/StatusDetail";
 import NavMenu from "../components/NavMenu";
 import { logoutFetch } from "../api";
+import { setNavigate } from "./navigation";
 
 function TokenVerify() {
   const [message, setMessage] = useState("");
@@ -12,6 +13,10 @@ function TokenVerify() {
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setNavigate(navigate);
+  }, [navigate]);
 
   // redirects index "/" routes conditionally based on login status
   useEffect(() => {
