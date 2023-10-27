@@ -6,8 +6,8 @@ import Routes from "./routes/Routes";
 import GridLoader from "react-spinners/GridLoader";
 
 function App() {
-  const { setToken } = useAuth();
-  const [isLoading, setIsLoading] = useState(true); // use AuthProvider's loading state instead?
+  const { loading: isLoading, setLoading: setIsLoading, setToken } = useAuth();
+  // const [isLoading, setIsLoading] = useState(true); // use AuthProvider's loading state instead?
   
 // checks specifically to see if the token had become corrupted
 // TODO: apply to requests other than refresh
