@@ -57,7 +57,7 @@ function RoundCard({ round, onGuessRequest }) {
 
     if (res.ok) {
       const updGame = await res.json();
-      if (updGame.status !== "correct") await newRoundByGameIdFetch(updGame.id);
+      // if (updGame.status !== "correct") await newRoundByGameIdFetch(updGame.id);
       onGuessRequest(updGame);
       setGuess(round.range_min);
       setErrors([]);

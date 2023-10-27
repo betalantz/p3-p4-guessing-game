@@ -22,7 +22,7 @@ export default function GameForm() {
     const res = await postGamesFetch(formData);
     if (res.ok) {
       const gameJSON = await res.json();
-      await newRoundByGameIdFetch(gameJSON.id);
+      // await newRoundByGameIdFetch(gameJSON.id);
       setMessage({ message: "New game added." });
       setFormData(initFormData());
       //navigate("/dashboard");

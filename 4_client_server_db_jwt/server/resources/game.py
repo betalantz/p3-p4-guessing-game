@@ -47,8 +47,9 @@ class Games(MethodView):
         """Add a new game for authenticated user."""
         try:
             game = Game(**fields)
+            round = game.new_round()
             game.user = current_user
-            db.session.add(game)
+            db.session.add(game, round)
             db.session.commit()
         except SQLAlchemyError as err:
             db.session.rollback()
@@ -64,10 +65,6 @@ class GamesById(MethodView):
     @game_authorized()
     def get(self, game):
         """Get game by id for authorized user."""
-        # game = db.get_or_404(Game, game_id)
-        # if game.user_id != current_user.id:
-        #     abort(403, message=f"You do not have permission to access Game {game_id}.")
-        # return game
         return game
 
     @jwt_required()
@@ -120,6 +117,8 @@ class GameRounds(MethodView):
         """Update current round by game id for authorized user."""
         try:
             game.update(fields["guess"])  # update current round's status and guess
+            round = game.new_round()
+            db.session.add(round)
             db.session.commit()
             return game
         except SQLAlchemyError as err:
