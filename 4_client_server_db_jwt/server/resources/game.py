@@ -93,23 +93,6 @@ class GameRounds(MethodView):
 
     @jwt_required()
     @blp.doc(authorize=True)
-    @blp.response(200, GameSchema)
-    @game_authorized()
-    def post(self, game):
-        """Add new round by game id for authorized user."""
-        try:
-            round = game.new_round()
-            db.session.add(round)
-            db.session.commit()
-            return game
-        except SQLAlchemyError as err:
-            db.session.rollback()
-            abort(400, game=err.__class__.__name__, errors=[str(x) for x in err.args])
-        except RuntimeError as err:
-            abort(409, message=str(err))
-
-    @jwt_required()
-    @blp.doc(authorize=True)
     @blp.arguments(GameUpdateSchema)
     @blp.response(200, GameSchema)
     @game_authorized()

@@ -36,12 +36,3 @@ export const roundsByGameIdFetch = async (id) => {
   return fetch(`/games/${id}/rounds`);
 };
 
-export const newRoundByGameIdFetch = async (id) => {
-  const config = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  return fetch(`/games/${id}/rounds`, config);
-};

@@ -11,7 +11,6 @@ import {
   gamesByIdFetch,
   deleteGamesByIdFetch,
   roundsByGameIdFetch,
-  newRoundByGameIdFetch,
 } from "./game";
 export {
   registerFetch,
@@ -24,5 +23,4 @@ export {
   gamesByIdFetch,
   deleteGamesByIdFetch,
   roundsByGameIdFetch,
-  newRoundByGameIdFetch,
 };
