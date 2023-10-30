@@ -14,7 +14,7 @@ export default function GameForm() {
   const [formData, setFormData] = useState(initFormData());
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState("");
-  //const navigate = useNavigate();
+  //const navigate = useNavigate(); // uncomment this line if you want to redirect to dashboard after adding a game
 
   async function postGame() {
     setMessage("");
@@ -24,7 +24,7 @@ export default function GameForm() {
       const gameJSON = await res.json();
       setMessage({ message: "New game added." });
       setFormData(initFormData());
-      //navigate("/dashboard");
+      //navigate("/dashboard");  // uncomment this line if you want to redirect to dashboard after adding a game
     } else {
       const err = await res.json();
       setIsError(true);

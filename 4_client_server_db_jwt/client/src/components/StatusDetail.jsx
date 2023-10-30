@@ -1,7 +1,6 @@
 import { Snackbar, Alert } from "@mui/material";
 
 function StatusDetail({ message, isError, onCloseHandler }) {
-  console.log();
   return (
     <>
       <Snackbar

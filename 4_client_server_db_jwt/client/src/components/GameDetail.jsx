@@ -3,14 +3,14 @@ import { useParams } from "react-router-dom";
 import GridLoader from "react-spinners/GridLoader";
 import RoundCard from "./RoundCard";
 import { roundsByGameIdFetch } from "../api";
-import { useAuth } from "../providers/authProvider";
+// import { useAuth } from "../providers/authProvider";
 
 function GameDetail() {
   const [rounds, setRounds] = useState([]);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState("pending");
   const { id } = useParams();
-  const { isTokenExpired } = useAuth();
+  // const { isTokenExpired } = useAuth();
 
   const fetchRounds = useCallback(async () => {
     const res = await roundsByGameIdFetch(id);
@@ -28,11 +28,11 @@ function GameDetail() {
     }
   }, [id]);
 
-  useEffect(() => {
-    if (!isTokenExpired()) {
-      fetchRounds().catch(console.error);
-    }
-  }, [id, fetchRounds, isTokenExpired]);
+  // useEffect(() => { // this is now handled on TokenVerify
+  //   if (!isTokenExpired()) {
+  //     fetchRounds().catch(console.error);
+  //   }
+  // }, [id, fetchRounds, isTokenExpired]);
 
   function handleUpdateGame() {
     fetchRounds().catch(console.error);
