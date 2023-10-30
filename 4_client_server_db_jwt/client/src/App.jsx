@@ -1,21 +1,28 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "./providers/authProvider";
 import { refreshFetch } from "./api";
-import { goToLogin } from './routes/navigation';
+import { goToLogin } from "./routes/navigation";
 import Routes from "./routes/Routes";
 import GridLoader from "react-spinners/GridLoader";
 
+
+// TODO: do an accessibility audit
+
 function App() {
-  const { setToken } = useAuth();
-  const [isLoading, setIsLoading] = useState(true); // use AuthProvider's loading state instead?
-  
-// checks specifically to see if the token had become corrupted
-function checkResponse(res) {
-  if (res.statusText === "Signature verification failed") {
-    goToLogin();
+  const { loading: isLoading, setLoading: setIsLoading, setToken } = useAuth();
+
+  // TODO: apply to requests other than refresh
+  // checks specifically to see if the token had become corrupted
+  async function checkResponse(res) {
+    if (res.status === 422) {
+      const error = await res.json();
+      if (error.msg === "Signature verification failed") {
+        goToLogin();
+      }
+    }
+    return res;
   }
-  return res;
-}
+
   useEffect(() => {
     setIsLoading(true);
     const fetchRefresh = async () => {

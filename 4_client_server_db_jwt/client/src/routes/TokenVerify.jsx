@@ -33,11 +33,6 @@ function TokenVerify() {
   // Extensible to show a modal to the user to ask if they want to stay logged in, display countdown, etc.
   useEffect(() => {
     if (isTokenExpired() && location.pathname !== "/login") {
-      console.log(
-        "🚀 ~ file: TokenVerify.jsx:22 ~ useEffect ~ pathname:",
-        location.pathname
-      );
-
       setMessage({
         message: "You will be logged out in 10 seconds due to inactivity.",
       });

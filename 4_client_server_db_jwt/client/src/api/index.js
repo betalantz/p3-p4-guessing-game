@@ -8,7 +8,6 @@ import {
   gamesFetch,
   postGamesFetch,
   patchGamesFetch,
-  // gamesByIdFetch,
   deleteGamesByIdFetch,
   roundsByGameIdFetch,
 } from "./game";
@@ -20,7 +19,6 @@ export {
   gamesFetch,
   postGamesFetch,
   patchGamesFetch,
-  // gamesByIdFetch,
   deleteGamesByIdFetch,
   roundsByGameIdFetch,
 };

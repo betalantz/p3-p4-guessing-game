@@ -2,12 +2,8 @@ export const gamesFetch = async () => {
   return fetch("/games");
 };
 
-// export const gamesByIdFetch = async (id) => {
-//   return fetch(`/games/${id}`);
-// };
-
 export const deleteGamesByIdFetch = async (id) => {
-  return fetch(`/games/${id}`);
+  return fetch(`/games/${id}`, { method: "DELETE" });
 };
 
 export const postGamesFetch = async (formData) => {
@@ -29,7 +25,7 @@ export const patchGamesFetch = async (formData, round) => {
     },
     body: JSON.stringify(formData),
   };
-  return fetch(`/games/${round.game_id}/rounds`, config);
+  return fetch(`/games/${round.game_id}`, config);
 };
 
 export const roundsByGameIdFetch = async (id) => {

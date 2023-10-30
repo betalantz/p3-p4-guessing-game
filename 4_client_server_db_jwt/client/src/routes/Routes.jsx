@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { useAuth } from "../providers/authProvider";
+// import { useAuth } from "../providers/authProvider";
 import Authentication from "../components/Authentication";
 import Dashboard from "../components/Dashboard";
 import GameDetail from "../components/GameDetail";
@@ -7,7 +7,7 @@ import GameForm from "../components/GameForm";
 import TokenVerify from "./TokenVerify";
 
 const Routes = () => {
-  const { token, isTokenExpired } = useAuth();
+  // const { token, isTokenExpired } = useAuth();
 
   const allRoutes = [
     {
@@ -26,18 +26,16 @@ const Routes = () => {
       path: "login",
       element: <Authentication />,
     },
-  ]
+  ];
 
   const publicRoutes = [
     {
       path: "/",
       element: <TokenVerify />,
-      children: [
-        ...allRoutes,
-      ],
+      children: [...allRoutes],
     },
   ];
-  
+
   const router = createBrowserRouter([...publicRoutes]);
 
   return <RouterProvider router={router} />;
