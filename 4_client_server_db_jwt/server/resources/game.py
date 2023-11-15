@@ -67,7 +67,7 @@ class GamesById(MethodView):
     def patch(self, fields, game):
         """Update current round by game id for authorized user."""
         try:
-            game.update(fields["guess"])  # update current round's status and guess
+            game.update(**fields)  # update current round's status and guess
             if not game.is_over:
                 round = game.new_round()
                 db.session.add(round)

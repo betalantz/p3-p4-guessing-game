@@ -48,10 +48,13 @@ function RoundCard({ round, onGuessRequest }) {
         );
     }
   }, [round, isCurrentRound]);
+  
+  console.log("🚀 ~ file: RoundCard.jsx:51 ~ RoundCard ~ isCurrentRound:", isCurrentRound)
 
   async function updateGame() {
     const formData = {
       guess: parseInt(guess),
+      round_id: round.id,
     };
     const res = await patchGamesFetch(formData, round);
 

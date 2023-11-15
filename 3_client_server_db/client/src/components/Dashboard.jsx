@@ -16,13 +16,13 @@ function Dashboard() {
   }, []);
 
   function handleAddGame(newGame) {
-    setGames((games) => [...games, newGame]);
+    setGames((games) => [...games, newGame]); // optimistic rendering
   }
 
   function handleDeleteGame(id) {
     fetch(`/games/${id}`, { method: "DELETE" }).then((r) => {
       if (r.ok) {
-        setGames((games) => games.filter((games) => games.id !== id));
+        setGames((games) => games.filter((games) => games.id !== id)); //optimistic rendering
       }
     });
   }
