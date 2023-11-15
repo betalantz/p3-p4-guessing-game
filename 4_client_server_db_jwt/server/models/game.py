@@ -66,17 +66,22 @@ class Game(db.Model):
                 game=self, range_min=self.range_min, range_max=self.range_max, number=1
             )
 
-    def update(self, guess):
+    def update(self, guess, round_id):
         """Update the current round based on the guess"""
         if self.is_over:
             raise RuntimeError(f"Error updating current round. Game {self.id} is over.")
-        if self.rounds:
-            round = self.current_round()
-            round.update(guess)
-            if round.status == GuessStatus.CORRECT:
-                self.is_over = True
+        if self.current_round().id == round_id:
+            if self.rounds:
+                round = self.current_round()
+                round.update(guess)
+                if round.status == GuessStatus.CORRECT:
+                    self.is_over = True
 
+            else:
+                raise RuntimeError(
+                    f"Error updating game {self.id}. Game does not contain a round to update."
+                )
         else:
             raise RuntimeError(
-                f"Error updating game {self.id}. Game does not contain a round to update."
+                f"Error updating game {self.id}. Round {round_id} is not current round."
             )

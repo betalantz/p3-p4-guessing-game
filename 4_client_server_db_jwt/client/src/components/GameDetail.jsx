@@ -35,7 +35,7 @@ function GameDetail() {
   }, [id, fetchRounds, isTokenExpired]);
 
   function handleUpdateGame() {
-    fetchRounds().catch(console.error);
+    fetchRounds().catch(console.error); // pessimistic update
   }
 
   if (status === "pending") return <GridLoader />;
