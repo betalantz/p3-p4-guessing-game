@@ -21,7 +21,7 @@ export default function GameForm() {
     setIsError(false);
     const res = await postGamesFetch(formData);
     if (res.ok) {
-      const gameJSON = await res.json();
+      const gameJSON = await res.json(); // only needed for optimistic rendering, but this is pessimistic
       setMessage({ message: "New game added." });
       setFormData(initFormData());
       //navigate("/dashboard");  // uncomment this line if you want to redirect to dashboard after adding a game

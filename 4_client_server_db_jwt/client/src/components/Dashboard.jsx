@@ -38,10 +38,10 @@ function Dashboard() {
   async function deleteGame(id) {
     const res = await deleteGamesByIdFetch(id);
     if (res.ok) {
-      setGames((games) => games.filter((games) => games.id !== id));
+      setGames((games) => games.filter((games) => games.id !== id)); // optimistic update
     } else {
       const err = await res.json();
-      setGames([]);
+      setGames([]); // deletes all games from state!?
       setIsError(true);
       setMessage({
         message: "Error deleting game. " + JSON.stringify(err.errors),
