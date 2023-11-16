@@ -13,23 +13,24 @@ function Dashboard() {
   const { games, setGames } = useGames();
   const { isTokenExpired } = useAuth();
 
+  const fetchGames = async () => {
+    setMessage("");
+    setIsError(false);
+    const res = await gamesFetch();
+    if (res.ok) {
+      const gamesJSON = await res.json();
+      setGames(gamesJSON);
+    } else {
+      const err = await res.json();
+      setGames([]);
+      setIsError(true);
+      setMessage({
+        message: "Error fetching games. " + JSON.stringify(err.errors),
+      });
+    }
+  };
+
   useEffect(() => {
-    const fetchGames = async () => {
-      setMessage("");
-      setIsError(false);
-      const res = await gamesFetch();
-      if (res.ok) {
-        const gamesJSON = await res.json();
-        setGames(gamesJSON);
-      } else {
-        const err = await res.json();
-        setGames([]);
-        setIsError(true);
-        setMessage({
-          message: "Error fetching games. " + JSON.stringify(err.errors),
-        });
-      }
-    };
     if (!isTokenExpired()) {
       fetchGames();
     }
@@ -38,10 +39,9 @@ function Dashboard() {
   async function deleteGame(id) {
     const res = await deleteGamesByIdFetch(id);
     if (res.ok) {
-      setGames((games) => games.filter((games) => games.id !== id)); // optimistic update
+      fetchGames() // pessimistic update
     } else {
       const err = await res.json();
-      setGames([]); // deletes all games from state!?
       setIsError(true);
       setMessage({
         message: "Error deleting game. " + JSON.stringify(err.errors),
