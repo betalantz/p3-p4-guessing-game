@@ -33,7 +33,6 @@ function GameCard({
           Play Game
         </button>
       </Link>
-      <Link to="/dashboard"></Link>
       <span>
         {" "}
         <button onClick={() => onDelete(id)}>Delete Game</button>

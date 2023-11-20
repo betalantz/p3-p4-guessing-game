@@ -50,7 +50,7 @@ function Dashboard() {
   }
 
   let gameCards = games
-    .sort((a, b) => a.number - b.number) // sort by number
+    .sort((a, b) => a.id - b.id) // sort by id
     .map((game) => (
       <GameCard key={game.id} game={game} onDelete={deleteGame} />
     ));

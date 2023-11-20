@@ -94,7 +94,7 @@ class GamesById(MethodView):
 
 
 @blp.route("/games/<int:game_id>/rounds")
-class GameRounds(MethodView):
+class RoundsByGameId(MethodView):
     @jwt_required()
     @blp.doc(authorize=True)
     @blp.response(200, RoundSchema(many=True))
