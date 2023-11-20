@@ -2,31 +2,11 @@ import React, { Suspense, useState, useEffect } from "react";
 import GameCard from "./GameCard";
 import GameForm from "./GameForm";
 import GridLoader from "react-spinners/GridLoader";
+import { IconButton } from "@mui/material";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { Link as RouterLink } from "react-router-dom";
 
-function Dashboard() {
-  const [games, setGames] = useState([]);
-
-  useEffect(() => {
-    const fetchGames = async () => {
-      const response = await fetch("/games");
-      const gameArr = await response.json();
-      setGames(gameArr);
-    };
-    fetchGames().catch(console.error);
-  }, []);
-
-  function handleAddGame(newGame) {
-    setGames((games) => [...games, newGame]); // optimistic rendering
-  }
-
-  function handleDeleteGame(id) {
-    fetch(`/games/${id}`, { method: "DELETE" }).then((r) => {
-      if (r.ok) {
-        setGames((games) => games.filter((games) => games.id !== id)); //optimistic rendering
-      }
-    });
-  }
-
+function Dashboard({ games, handleDeleteGame }) {
   let gameCards = games.map((game) => (
     <GameCard key={game.id} game={game} onDelete={handleDeleteGame} />
   ));
@@ -34,11 +14,13 @@ function Dashboard() {
   return (
     <>
       <Suspense fallback={<GridLoader />}>
+        <IconButton component={RouterLink} to="/games/new">
+          <AddCircleIcon fontSize="large" color="primary"/>
+        </IconButton>
         <h1>Your Games</h1>
         <div className="gameList">{gameCards}</div>
       </Suspense>
       <hr />
-      <GameForm onGameRequest={handleAddGame} />
     </>
   );
 }
