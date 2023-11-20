@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export default function GameForm({ onGameRequest }) {
   const initFormState = {
     difficulty: "easy",
     range_min: 1,
     range_max: 100,
-  }
+  };
   const [formData, setFormData] = useState(initFormState);
   const [errors, setErrors] = useState([]);
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ export default function GameForm({ onGameRequest }) {
       onGameRequest(newGame);
       setFormData(initFormState);
       setErrors([]);
-      navigate('/')
+      navigate("/");
     } else {
       const messages = await res.json();
       setErrors([JSON.stringify(messages.errors)]);
@@ -49,7 +49,7 @@ export default function GameForm({ onGameRequest }) {
       <form onSubmit={handleSubmit}>
         <h2>New Game</h2>
         <div>
-          <label htmlFor="difficulty">Select a level of difficulty:</label>
+          <label htmlFor="difficulty">Select a level of difficulty:</label>{" "}
           <select
             id="difficulty"
             name="difficulty"
@@ -62,8 +62,7 @@ export default function GameForm({ onGameRequest }) {
         </div>
 
         <div>
-          <label htmlFor="range_min">Minimum value:</label>
-
+          <label htmlFor="range_min">Minimum value:</label>{" "}
           <input
             type="number"
             id="range_min"
@@ -73,8 +72,7 @@ export default function GameForm({ onGameRequest }) {
           />
         </div>
         <div>
-          <label htmlFor="range_max">Maximum value:</label>
-
+          <label htmlFor="range_max">Maximum value:</label>{" "}
           <input
             type="number"
             id="range_max"
@@ -83,11 +81,12 @@ export default function GameForm({ onGameRequest }) {
             onChange={handleChange}
           />
         </div>
-        {errors.length && errors.map((err) => (
-          <p key={err} style={{ color: "red" }}>
-            {err}
-          </p>
-        ))}
+        {errors.length > 0 &&
+          errors.map((err) => (
+            <p key={err} style={{ color: "red" }}>
+              {err}
+            </p>
+          ))}
         <button type="submit">Submit</button>
       </form>
     </section>

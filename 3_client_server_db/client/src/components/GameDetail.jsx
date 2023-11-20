@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import RoundCard from "./RoundCard";
 
 function GameDetail() {
-  const [game, setGame] = useState({ secret_number: 0 });
   const [rounds, setRounds] = useState([]);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState("pending");
@@ -33,11 +32,11 @@ function GameDetail() {
   }
 
   if (status === "pending") return <h2>Loading...</h2>;
-  if (status === "rejected") return <h2>Error: {error.error}</h2>;
+  if (status === "rejected") return <h2 style={{ color: "red" }}>Error: {error.status}</h2>;
 
   return (
     <div>
-      <h2>Game {game.id}</h2>
+      <h2>Game {id}</h2>
       <div className="roundList">
         <ul>
           {rounds

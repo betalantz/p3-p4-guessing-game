@@ -103,7 +103,7 @@ function RoundCard({ round, onGuessRequest }) {
           </Box>
         </Stack>
       </form>
-      {errors.length && errors.map((err) => (
+      {errors.length > 0 && errors.map((err) => (
         <p key={err} style={{ color: "red" }}>
           {err}
         </p>
