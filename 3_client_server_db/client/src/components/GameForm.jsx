@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 export default function GameForm({ onGameRequest }) {
-  const [formData, setFormData] = useState({
+  const initFormState = {
     difficulty: "easy",
     range_min: 1,
     range_max: 100,
-  });
+  }
+  const [formData, setFormData] = useState(initFormState);
   const [errors, setErrors] = useState([]);
+  const navigate = useNavigate();
 
   async function postGame() {
     const config = {
@@ -20,12 +23,9 @@ export default function GameForm({ onGameRequest }) {
     if (res.ok) {
       const newGame = await res.json();
       onGameRequest(newGame);
-      setFormData({
-        difficulty: "easy",
-        range_min: 1,
-        range_max: 100,
-      });
+      setFormData(initFormState);
       setErrors([]);
+      navigate('/')
     } else {
       const messages = await res.json();
       setErrors([JSON.stringify(messages.errors)]);

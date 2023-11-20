@@ -20,7 +20,6 @@ function Dashboard({ games, handleDeleteGame }) {
         <h1>Your Games</h1>
         <div className="gameList">{gameCards}</div>
       </Suspense>
-      <hr />
     </>
   );
 }
