@@ -83,7 +83,7 @@ export default function GameForm({ onGameRequest }) {
             onChange={handleChange}
           />
         </div>
-        {errors.map((err) => (
+        {errors.length && errors.map((err) => (
           <p key={err} style={{ color: "red" }}>
             {err}
           </p>

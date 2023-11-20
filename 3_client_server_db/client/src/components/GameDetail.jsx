@@ -4,31 +4,32 @@ import RoundCard from "./RoundCard";
 
 function GameDetail() {
   const [game, setGame] = useState({ secret_number: 0 });
+  const [rounds, setRounds] = useState([]);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState("pending");
   const { id } = useParams();
 
-  const fetchGame = useCallback(async () => {
-    const response = await fetch(`/games/${id}`);
+  const fetchGameRounds = useCallback(async () => {
+    const response = await fetch(`/games/${id}/rounds`);
     if (response.ok) {
-      const gameJSON = await response.json();
-      setGame(gameJSON);
+      const roundsJSON = await response.json();
+      setRounds(roundsJSON);
       setError(null);
       setStatus("resolved");
     } else {
       const err = await response.json();
-      setGame(null);
+      setRounds([]);
       setError(err);
       setStatus("rejected");
     }
   }, [id]);
 
   useEffect(() => {
-    fetchGame().catch(console.error);
-  }, [id, fetchGame]);
+    fetchGameRounds().catch(console.error);
+  }, [id, fetchGameRounds]);
 
   function handleUpdateGame() {
-    fetchGame();
+    fetchGameRounds();
   }
 
   if (status === "pending") return <h2>Loading...</h2>;
@@ -39,11 +40,12 @@ function GameDetail() {
       <h2>Game {game.id}</h2>
       <div className="roundList">
         <ul>
-          {game.rounds.reverse().map((round, index) => (
+          {rounds
+            .sort((a, b) => b.number - a.number)
+            .map((round, index) => (
             <RoundCard
               key={index}
               round={round}
-              game={game}
               onGuessRequest={handleUpdateGame}
             />
           ))}

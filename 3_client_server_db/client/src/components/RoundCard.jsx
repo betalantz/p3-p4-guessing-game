@@ -51,6 +51,7 @@ function RoundCard({ round, onGuessRequest }) {
   async function updateGame() {
     const updateData = {
       guess: parseInt(guess),
+      round_id: round.id,
     };
     const config = {
       method: "PATCH",
@@ -59,7 +60,7 @@ function RoundCard({ round, onGuessRequest }) {
       },
       body: JSON.stringify(updateData),
     };
-    const res = await fetch(`/games/${round.game.id}`, config);
+    const res = await fetch(`/games/${round.game_id}`, config);
     if (res.ok) {
       const updGame = await res.json();
       onGuessRequest(updGame);
@@ -102,7 +103,7 @@ function RoundCard({ round, onGuessRequest }) {
           </Box>
         </Stack>
       </form>
-      {errors.map((err) => (
+      {errors.length && errors.map((err) => (
         <p key={err} style={{ color: "red" }}>
           {err}
         </p>
