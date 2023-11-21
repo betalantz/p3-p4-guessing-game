@@ -1,8 +1,7 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from models import Game, Round, db
+from models import Game, Round
 from schemas import GameSchema, GameUpdateSchema, RoundSchema
-from sqlalchemy.exc import SQLAlchemyError
 
 blp = Blueprint("Guessing Game API", __name__)
 
@@ -12,7 +11,7 @@ class Games(MethodView):
     @blp.response(200, GameSchema(many=True))
     def get(self):
         """List games"""
-        return db.session.scalars(db.select(Game))
+        return GameSchema().dump(Game.all(), many=True)
 
     @blp.arguments(GameSchema)
     @blp.response(201, GameSchema)
@@ -21,12 +20,9 @@ class Games(MethodView):
         try:
             game = Game(**fields)
             round = game.new_round()
-            db.session.add(game, round)
-            db.session.commit()
-        except SQLAlchemyError as err:
-            db.session.rollback()
+        except Exception as err:
             abort(400, game=err.__class__.__name__, errors=[str(x) for x in err.args])
-        return game
+        return GameSchema().dump(game), 201
 
 
 @blp.route("/games/<int:game_id>")
@@ -35,16 +31,13 @@ class GamesById(MethodView):
     @blp.response(200, GameSchema)
     def patch(self, fields, game_id):
         """Update game by id.  Update current round based on the guess."""
-        game = db.get_or_404(Game, game_id)
+        game = [game for game in Game.all() if game.id == game_id].first()
         try:
             game.update(**fields)
             if not game.is_over:
                 next_round = game.new_round()
-                db.session.add(next_round)
-            db.session.commit()
-            return game
-        except SQLAlchemyError as err:
-            db.session.rollback()
+            return GameSchema().dump(game)
+        except Exception as err:
             abort(400, game=err.__class__.__name__, errors=[str(x) for x in err.args])
         except RuntimeError as err:
             abort(409, message=str(err))
@@ -52,12 +45,11 @@ class GamesById(MethodView):
     @blp.response(204)
     def delete(self, game_id):
         """Delete game and associated rounds by id"""
-        game = db.get_or_404(Game, game_id)
+        game = [game for game in Game.all() if game.id == game_id].first()
         try:
-            db.session.delete(game)
-            db.session.commit()
-        except SQLAlchemyError as err:
-            db.session.rollback()
+            [Round.all.remove(round) for round in game.rounds()]
+            Game.all.remove(game)
+        except Exception as err:
             abort(400, game=err.__class__.__name__, errors=[str(x) for x in err.args])
 
 
@@ -66,5 +58,5 @@ class RoundsByGameId(MethodView):
     @blp.response(200, RoundSchema(many=True))
     def get(self, game_id):
         """Get rounds by game id"""
-        game = db.get_or_404(Game, game_id)
-        return game.rounds
+        game = [game for game in Game.all() if game.id == game_id].first()
+        return game.rounds()
