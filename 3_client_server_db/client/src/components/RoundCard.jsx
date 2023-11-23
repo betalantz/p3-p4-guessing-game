@@ -60,7 +60,7 @@ function RoundCard({ round, onGuessRequest }) {
       },
       body: JSON.stringify(updateData),
     };
-    const res = await fetch(`/games/${round.game_id}`, config);
+    const res = await fetch(`/games/${round.game.id}`, config);
     if (res.ok) {
       const updGame = await res.json();
       onGuessRequest(updGame);
