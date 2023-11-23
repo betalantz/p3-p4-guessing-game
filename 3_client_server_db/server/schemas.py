@@ -1,3 +1,6 @@
+import logging
+
+import ipdb
 from marshmallow import (
     Schema,
     ValidationError,
@@ -8,12 +11,14 @@ from marshmallow import (
 )
 from models import DifficultyLevel, GuessStatus
 
+logger = logging.getLogger(__name__)
+
 
 class RoundSchema(Schema):
     # Use 'only' or 'exclude' to avoid infinite recursion with two-way nested fields.
     id = fields.Int(dump_only=True)
     #
-    game_id = fields.Int()
+    game = fields.Nested("GameSchema", dump_only=True)
     range_min = fields.Int()
     range_max = fields.Int()
     number = fields.Int()
@@ -36,14 +41,24 @@ class GameSchema(Schema):
     secret_number = fields.Int(dump_only=True)
     is_over = fields.Boolean(dump_only=True)
     # rounds = fields.Nested(RoundSchema, many=True, dump_only = True)
-    number_of_rounds = fields.Function(lambda obj: len(obj.rounds), dump_only=True)
-    current_round = fields.Nested(RoundSchema, dump_only=True)
+    current_round = fields.Nested("RoundSchema", exclude=("game",), dump_only=True)
+    number_of_rounds = fields.Int(dump_only=True)
+    # number_of_rounds = fields.Function(lambda obj: len(obj.rounds), dump_only=True)
 
     # Compute current round prior to serialization
-    @pre_dump()
-    def get_data(self, data, **kwargs):
-        data.current_round = data.current_round()
-        return data
+    # def get_current_round(self, obj):
+    #     # print(type(obj))
+    #     return obj.current_round()
+
+    # def get_number_of_rounds(self, obj):
+    #     # ipdb.set_trace()
+    #     logger.debug(f"get_number_of_rounds called with: {obj}")
+    #     return len(obj.rounds)
+
+    # @pre_dump()
+    # def get_data(self, data, **kwargs):
+    #     data.current_round = data.current_round()
+    #     return data
 
     @validates_schema
     def validate_range(self, data, **kwargs):

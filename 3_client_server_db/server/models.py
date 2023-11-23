@@ -1,5 +1,8 @@
+import logging
 from enum import StrEnum, auto
 from random import randint
+
+logger = logging.getLogger(__name__)
 
 # from flask_sqlalchemy import SQLAlchemy
 # from sqlalchemy import MetaData
@@ -34,7 +37,7 @@ class Round:
     all = []
 
     def __init__(self, game, range_min, range_max, number):
-        self.id = len(self.cls.all) + 1
+        self.id = len(type(self).all) + 1
         self.game = game
         self.range_min = range_min
         self.range_max = range_max
@@ -45,6 +48,7 @@ class Round:
 
     def update(self, guess):
         """Update the current round based on the guess"""
+        logger.debug(f"Updating round {self.id} with guess {guess}")
         if self.status:
             raise RuntimeError("Round status has already been set.")
         self.guess = guess
@@ -93,41 +97,45 @@ class Round:
 #                 self.status = GuessStatus.LOW
 
 
-def create_secret_number(context):
-    return randint(
-        context.get_current_parameters()["range_min"],
-        context.get_current_parameters()["range_max"],
-    )
+def create_secret_number(range_min, range_max):
+    return randint(range_min, range_max)
 
 
 class Game:
     all = []
 
     def __init__(self, difficulty, range_min, range_max):
-        self.id = len(self.cls.all) + 1
+        self.id = len(type(self).all) + 1
         self.difficulty = difficulty
         self.range_min = range_min
         self.range_max = range_max
-        self.secret_number = create_secret_number(self)
+        self.secret_number = create_secret_number(range_min, range_max)
         self.is_over = False
         Game.all.append(self)
+        logger.debug(f"Game object created and added to Game.all: {self.__dict__}")
 
+    @property
     def rounds(self):
         return [round for round in Round.all if round.game == self]
 
+    @property
     def current_round(self):
         return (
-            max(self.rounds(), key=lambda round: round.number)
-            if len(self.rounds())
+            max(self.rounds, key=lambda round: round.number)
+            if len(self.rounds)
             else None
         )
+
+    @property
+    def number_of_rounds(self):
+        return len(self.rounds)
 
     def new_round(self):
         if self.is_over:
             raise RuntimeError(f"Error creating new round. Game {self.id} is over.")
-        if self.rounds():
+        if self.rounds:
             # create next round based on current round
-            round = self.current_round()
+            round = self.current_round
             if round.status is None:
                 raise RuntimeError(
                     f"Current round {round.id} status must be set prior to creating a new round."
@@ -154,9 +162,10 @@ class Game:
         if self.is_over:
             raise RuntimeError(f"Game {self.id} is over.")
         """Only allow the current round to be updated"""
-        if self.current_round().id == round_id:
-            if self.rounds():
-                round = self.current_round()
+        if self.current_round.id == round_id:
+            logger.debug(f"Updating game {self.id} with guess {guess}")
+            if self.rounds:
+                round = self.current_round
                 round.update(guess)
                 if round.status == GuessStatus.CORRECT:
                     self.is_over = True
