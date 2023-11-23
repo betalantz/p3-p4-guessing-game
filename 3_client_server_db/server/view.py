@@ -75,7 +75,7 @@ class RoundsByGameId(MethodView):
         """Get rounds by game id"""
         round_schema = RoundSchema(exclude=("game",), many=True)
         games = [game for game in Game.all if game.id == game_id]
-        game = games[0]
         if not games:
             abort(404, message=f"Game {game_id} not found.")
+        game = games[0]
         return round_schema.dump(game.rounds)
