@@ -9,7 +9,7 @@ function GameCard({
     is_over,
     range_min,
     range_max,
-    rounds,
+    number_of_rounds,
   },
   onDelete,
 }) {
@@ -22,7 +22,7 @@ function GameCard({
       </p>
       {is_over && (
         <p>
-          You guessed the secret number {secret_number} in {rounds.length}{" "}
+          You guessed the secret number {secret_number} in {number_of_rounds}{" "}
           guesses.
         </p>
       )}

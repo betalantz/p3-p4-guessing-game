@@ -73,7 +73,7 @@ class RoundsByGameId(MethodView):
     @blp.response(200, RoundSchema(many=True))
     def get(self, game_id):
         """Get rounds by game id"""
-        round_schema = RoundSchema(exclude=("game",), many=True)
+        round_schema = RoundSchema(many=True)
         games = [game for game in Game.all if game.id == game_id]
         if not games:
             abort(404, message=f"Game {game_id} not found.")

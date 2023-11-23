@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import RoundCard from "./RoundCard";
 
-function GameDetail() {
+function GameDetail({ onGameUpdate }) {
   const [rounds, setRounds] = useState([]);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState("pending");
@@ -27,7 +27,8 @@ function GameDetail() {
     fetchGameRounds().catch(console.error);
   }, [id, fetchGameRounds]);
 
-  function handleUpdateGame() {
+  function handleUpdateGame(updatedGame) {
+    onGameUpdate(updatedGame);
     fetchGameRounds();
   }
 

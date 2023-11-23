@@ -21,6 +21,12 @@ function App() {
     setGames((games) => [...games, newGame]); // optimistic rendering
   }
 
+  function handleUpdateGame(updatedGame) {
+    setGames((games) =>
+      games.map((game) => (game.id === updatedGame.id ? updatedGame : game))
+    );
+  }
+
   function handleDeleteGame(id) {
     fetch(`/games/${id}`, { method: "DELETE" }).then((r) => {
       if (r.ok) {
@@ -42,7 +48,7 @@ function App() {
               />
             }
           />
-          <Route path="/games/:id/*" element={<GameDetail />} />
+          <Route path="/games/:id" element={<GameDetail onGameUpdate={handleUpdateGame}/>} />
           <Route
             path="/games/new/*"
             element={<GameForm onGameRequest={handleAddGame} />}
