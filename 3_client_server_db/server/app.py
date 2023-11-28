@@ -1,23 +1,15 @@
 #!/usr/bin/env python3
-import logging
 import warnings
 
-# from models import db
 from default_config import DefaultConfig
 from flask import Flask, redirect
-
-# from flask_migrate import Migrate
 from flask_smorest import Api
-from view import blp as GameBlueprint
+from resources import blp as GameBlueprint
 
 app = Flask(__name__)
 app.config.from_object(DefaultConfig)
 app.json.compact = False
 
-logging.basicConfig(level=logging.DEBUG)
-
-# Migrate(app, db)
-# db.init_app(app)
 
 # Prevent warnings about nested schemas
 with app.app_context():
