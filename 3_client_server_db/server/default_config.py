@@ -3,6 +3,7 @@
 
 class DefaultConfig:
     """Default configuration"""
+
     API_TITLE = "Guessing Game API"
     API_VERSION = 0.1
     OPENAPI_VERSION = "3.0.3"
@@ -12,5 +13,4 @@ class DefaultConfig:
     PROPAGATE_EXCEPTIONS = True
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:postgres@localhost:5432/guessing_game"
-    
+    SQLALCHEMY_DATABASE_URI = "sqlite:///gamedata.db"
