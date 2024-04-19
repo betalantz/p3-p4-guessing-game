@@ -1,4 +1,5 @@
 """Default application settings"""
+
 import secrets
 from datetime import timedelta
 
@@ -15,9 +16,8 @@ class DefaultConfig:
     PROPAGATE_EXCEPTIONS = True
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = (
-        "postgresql://postgres:postgres@localhost:5432/flatiron_labs"
-    )
+    SQLALCHEMY_DATABASE_URI = "sqlite:///gamedata.db"
+
     JWT_SECRET_KEY = str(secrets.SystemRandom().getrandbits(128))
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=20)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
